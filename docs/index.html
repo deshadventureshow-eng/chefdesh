@@ -574,7 +574,12 @@
 
     // Scroll reveal
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.observe(e.target); }
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
     });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 

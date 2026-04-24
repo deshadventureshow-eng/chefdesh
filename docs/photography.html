@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photography — Desh Fernando</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:#0a0a0a;--near-black:#111;--gold:#c9a96e;--gold-light:#e8c98a;
+    --gold-dim:rgba(201,169,110,0.15);--white:#f5f0ea;
+    --white-dim:rgba(245,240,234,0.6);--white-faint:rgba(245,240,234,0.1);
+    --serif:'Cormorant Garamond',Georgia,serif;--sans:'Montserrat',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--white);font-family:var(--sans);font-weight:300;overflow-x:hidden}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 3rem;background:linear-gradient(to bottom,rgba(10,10,10,.97),transparent)}
+  .nav-logo{font-family:var(--serif);font-size:1.1rem;font-weight:300;letter-spacing:.12em;color:var(--white);text-decoration:none}
+  .nav-logo span{color:var(--gold);font-style:italic}
+  .nav-links{display:flex;gap:2rem;list-style:none}
+  .nav-links a{font-size:.62rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--white-dim);text-decoration:none;transition:color .3s;position:relative}
+  .nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  .nav-links a:hover::after,.nav-links a.active::after{width:100%}
+  .nav-cta{background:rgba(201,169,110,.1);padding:.4rem 1rem;border:1px solid rgba(201,169,110,.3);color:var(--gold)!important}
+
+  .hero{height:62vh;min-height:420px;display:flex;flex-direction:column;justify-content:flex-end;padding:0 3rem 4rem;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a1208 0%,#0a0a0a 55%,#0d0d0d 100%)}
+  .hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 72% 38%,rgba(201,169,110,.07) 0%,transparent 60%)}
+  .hero-grid{position:absolute;inset:0;opacity:.035;background-image:linear-gradient(var(--gold) 1px,transparent 1px),linear-gradient(90deg,var(--gold) 1px,transparent 1px);background-size:80px 80px}
+  .hero-eyebrow{font-size:.6rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;position:relative;display:flex;align-items:center;gap:1rem}
+  .hero-eyebrow::before{content:'';width:40px;height:1px;background:var(--gold)}
+  .hero-title{font-family:var(--serif);font-size:clamp(3rem,7vw,6.5rem);font-weight:300;line-height:1.0;position:relative}
+  .hero-title em{font-style:italic;color:var(--gold-light)}
+  .hero-sub{margin-top:1.2rem;font-size:.75rem;font-weight:300;letter-spacing:.15em;color:var(--white-dim);max-width:440px;line-height:1.9;position:relative}
+
+  .gallery-nav{position:sticky;top:62px;z-index:50;background:var(--near-black);border-bottom:1px solid rgba(201,169,110,.12);display:flex;padding:0 3rem;overflow-x:auto;scrollbar-width:none}
+  .gallery-nav::-webkit-scrollbar{display:none}
+  .gallery-tab{font-size:.6rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--white-dim);padding:1.1rem 1.6rem;cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;white-space:nowrap;transition:all .3s}
+  .gallery-tab:hover{color:var(--white)}
+  .gallery-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+  .gallery-section{display:none;padding:4rem 3rem 6rem;animation:fadeUp .45s ease}
+  .gallery-section.active{display:block}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .section-header{margin-bottom:3rem;display:flex;align-items:flex-end;justify-content:space-between}
+  .section-title{font-family:var(--serif);font-size:clamp(2.2rem,4vw,3.5rem);font-weight:300;line-height:1}
+  .section-title em{font-style:italic;color:var(--gold)}
+  .section-count{font-size:.58rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;padding-bottom:.4rem}
+
+  /* MASONRY — flex columns, never collapses */
+  .masonry-wrap{display:flex;gap:8px;align-items:flex-start}
+  .masonry-col{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+  .masonry-item{position:relative;overflow:hidden;cursor:pointer;width:100%;background:#1a1a1a}
+  .masonry-item img{display:block;width:100%;height:auto;transition:transform .65s cubic-bezier(.25,.46,.45,.94),filter .4s;filter:brightness(.9) saturate(.95)}
+  .masonry-item:hover img{transform:scale(1.04);filter:brightness(1) saturate(1.05)}
+  .masonry-item::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.45) 0%,transparent 45%);opacity:0;transition:opacity .4s;pointer-events:none}
+  .masonry-item:hover::after{opacity:1}
+  /* Placeholder for images not yet self-hosted */
+  .masonry-item.placeholder{aspect-ratio:2/3;display:flex;align-items:center;justify-content:center}
+  .masonry-item.placeholder::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#1a1a1a,#222)}
+  .masonry-item.placeholder .ph-label{position:relative;font-size:.55rem;letter-spacing:.2em;color:rgba(201,169,110,.3);text-transform:uppercase;z-index:1}
+
+  /* MOTION */
+  .motion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  @media(max-width:900px){.motion-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:540px){.motion-grid{grid-template-columns:1fr}}
+  .motion-item{position:relative;overflow:hidden;cursor:pointer;border:1px solid var(--white-faint);transition:border-color .3s;background:#161616;aspect-ratio:16/9}
+  .motion-item:hover{border-color:rgba(201,169,110,.35)}
+  .motion-thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.72;transition:opacity .3s}
+  .motion-item:hover .motion-thumb{opacity:1}
+  .motion-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.7rem;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 100%)}
+  .play-circle{width:50px;height:50px;border-radius:50%;border:1px solid rgba(201,169,110,.5);display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0}
+  .motion-item:hover .play-circle{background:rgba(201,169,110,.15);border-color:var(--gold)}
+  .play-circle svg{width:15px;height:15px;fill:var(--gold);margin-left:3px}
+  .motion-label{font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--white);text-align:center;padding:0 .8rem;text-shadow:0 1px 4px rgba(0,0,0,.9);line-height:1.6}
+
+  /* LIGHTBOX */
+  .lightbox{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.97);align-items:center;justify-content:center}
+  .lightbox.open{display:flex}
+  .lightbox img{max-height:92vh;max-width:90vw;object-fit:contain}
+  .lb-close{position:absolute;top:1.8rem;right:2.2rem;font-size:1.5rem;color:var(--white-dim);cursor:pointer;background:none;border:none;transition:color .2s;font-weight:300}
+  .lb-close:hover{color:var(--gold)}
+  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:none;border:1px solid rgba(255,255,255,.12);color:var(--white-dim);width:46px;height:46px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.3rem;transition:all .3s}
+  .lb-nav:hover{border-color:var(--gold);color:var(--gold)}
+  .lb-prev{left:1.5rem}.lb-next{right:1.5rem}
+  .lb-counter{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);font-size:.58rem;letter-spacing:.2em;color:var(--white-dim)}
+
+  /* ABOUT */
+  .about-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:5rem;align-items:start;max-width:1060px}
+  @media(max-width:800px){.about-layout{grid-template-columns:1fr;gap:3rem}}
+  .about-image{position:relative}
+  .about-image img{width:100%;height:auto;display:block;filter:grayscale(15%)}
+  .about-image::before{content:'';position:absolute;top:-10px;left:-10px;right:10px;bottom:10px;border:1px solid var(--gold-dim);z-index:-1}
+  .about-content{padding-top:.5rem}
+  .gold-line{width:40px;height:1px;background:var(--gold);margin-bottom:2rem}
+  .about-quote{font-family:var(--serif);font-size:1.4rem;font-weight:300;font-style:italic;line-height:1.55;color:var(--gold-light);margin-bottom:2.5rem;padding-left:1.4rem;border-left:1px solid var(--gold)}
+  .about-quote small{display:block;margin-top:.6rem;font-size:.63rem;letter-spacing:.18em;font-style:normal;color:var(--white-dim)}
+  .about-bio{font-size:.78rem;line-height:2.1;color:var(--white-dim);margin-bottom:1.4rem}
+  .about-cols{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--white-faint)}
+  .col-label{font-size:.58rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem}
+  .col-text{font-size:.73rem;line-height:1.9;color:var(--white-dim)}
+
+  footer{border-top:1px solid var(--white-faint);padding:2.5rem 3rem;display:flex;align-items:center;justify-content:space-between}
+  .footer-logo{font-family:var(--serif);font-size:.9rem;letter-spacing:.1em;color:var(--white-dim)}
+  .footer-logo span{color:var(--gold);font-style:italic}
+  .footer-copy{font-size:.58rem;letter-spacing:.12em;color:rgba(245,240,234,.25)}
+
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  @media(max-width:900px){.masonry-wrap{/* 2 cols handled by JS */}}
+  @media(max-width:540px){.masonry-wrap{/* 1 col handled by JS */}}
+</style>
+</head>
+<body>
+
+<!-- NAV — logo links back to site index -->
+<nav>
+  <a href="/index.html" class="nav-logo">Chef <span>Desh</span></a>
+  <ul class="nav-links">
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/wild-kitchen.html">Wild Kitchen</a></li>
+    <li><a href="/workshop.html">Workshop</a></li>
+    <li><a href="/photography.html" class="active">Photography</a></li>
+    <li><a href="/contact.html" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">Visual Content Creator · Vancouver Island</div>
+  <h1 class="hero-title">Every frame,<br><em>with its own story,</em><br>crafted with intention.</h1>
+  <p class="hero-sub">Portraiture. Food. Lifestyle. Motion.<br>Two decades behind the lens — from the film schools of Montréal to the wilderness of Vancouver Island.</p>
+</section>
+
+<div class="gallery-nav" id="galleryNav">
+  <button class="gallery-tab active" onclick="showGallery('portraits',this)">Portraits</button>
+  <button class="gallery-tab" onclick="showGallery('food',this)">Food</button>
+  <button class="gallery-tab" onclick="showGallery('lifestyle',this)">Lifestyle</button>
+  <button class="gallery-tab" onclick="showGallery('personal',this)">Personal</button>
+  <button class="gallery-tab" onclick="showGallery('motion',this)">Motion</button>
+  <button class="gallery-tab" onclick="showGallery('about',this)">About</button>
+</div>
+
+<section id="gallery-portraits" class="gallery-section active">
+  <div class="section-header reveal"><h2 class="section-title">Por<em>traits</em></h2><span class="section-count" id="count-portraits"></span></div>
+  <div class="masonry-wrap" id="masonry-portraits"></div>
+</section>
+<section id="gallery-food" class="gallery-section">
+  <div class="section-header reveal"><h2 class="section-title">Food &amp; <em>Fire</em></h2><span class="section-count" id="count-food"></span></div>
+  <div class="masonry-wrap" id="masonry-food"></div>
+</section>
+<section id="gallery-lifestyle" class="gallery-section">
+  <div class="section-header reveal"><h2 class="section-title">Life<em>style</em></h2><span class="section-count" id="count-lifestyle"></span></div>
+  <div class="masonry-wrap" id="masonry-lifestyle"></div>
+</section>
+<section id="gallery-personal" class="gallery-section">
+  <div class="section-header reveal"><h2 class="section-title">Per<em>sonal</em></h2><span class="section-count" id="count-personal"></span></div>
+  <div class="masonry-wrap" id="masonry-personal"></div>
+</section>
+<section id="gallery-motion" class="gallery-section">
+  <div class="section-header reveal"><h2 class="section-title">Mo<em>tion</em></h2><span class="section-count">18 films</span></div>
+  <div class="motion-grid" id="motion-grid"></div>
+</section>
+<section id="gallery-about" class="gallery-section">
+  <div class="about-layout reveal">
+    <div class="about-image">
+      <img src="https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,4009,2207,4009,1200/0-0-0/80915991-2e73-494b-81b1-2430819d0a5c/1/1/_MG_4140.jpg?fjkss=exp=2089513881~hmac=5b794420ed14c707836870ee1419e1567b919a0a0f5afd5803ba2d83ae3f3e68" alt="Desh Fernando">
+    </div>
+    <div class="about-content">
+      <div class="gold-line"></div>
+      <blockquote class="about-quote">"Vision is the art of seeing what is invisible to others."<small>— Jonathan Swift</small></blockquote>
+      <p class="about-bio">Growing up in North York, Ontario, Desh discovered at a very early age that a life in film and photography is what he wanted to pursue. Born in Sri Lanka, he journeyed to Canada at age five. At age ten, Desh stole the family camcorder to shoot his first film — developing a fascination for creating narratives with the simple use of an edit.</p>
+      <p class="about-bio">In 2001, he enrolled at Concordia University's Mel Hoppenheim School of Cinema, where he created <em>Lola &amp; Me</em> — integrating theatre, dance, painting, and original music. It premiered on Bravo! Television and the National Film Board of Canada in June 2004, receiving the Istvan Kantor Award for Innovation.</p>
+      <p class="about-bio">Today, Desh works from Vancouver Island as a chef, filmmaker, host, and visual storyteller — bringing the same singular eye to a fire-cooked meal in the wilderness as to a portrait session in studio.</p>
+      <div class="about-cols">
+        <div><div class="col-label">Expertise</div><p class="col-text">Portraiture. Food &amp; fire. Lifestyle. Motion. Wilderness photography. Two decades of analog and digital used according to the needs of the moment.</p></div>
+        <div><div class="col-label">Work with Me</div><p class="col-text">Have an upcoming project? Get in touch to discuss rates, scheduling, and collaboration across photography, film, and brand content.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)">‹</button>
+  <img id="lb-img" src="" alt="">
+  <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
+  <div class="lb-counter" id="lb-counter"></div>
+</div>
+
+<footer>
+  <div class="footer-logo">Chef <span>Desh</span> · Photography</div>
+  <div class="footer-copy">© 2026 Desh Fernando · deshfernando.com</div>
+</footer>
+
+<script>
+// ─── VERIFIED IMAGE URLs ───────────────────────────────────────────────────
+// These are the real scraped URLs from Format's live CDN.
+// Once you download images from Format Storage and upload to Netlify,
+// replace these with: "/images/photography/portraits/filename.jpg" etc.
+
+const IMAGES = {
+  portraits: [
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2500,3538,1600,3538/0-0-0/e3bce9c9-4ef7-430d-81d1-36b7742216bd/1/1/CF5D874F-0706-460C-845C-C2AB970391A8.jpg?fjkss=exp=2089513881~hmac=900460b1d09196a0930eea5fc6bc96aeb6d112e1bbdc41ff40e7959c0a2baceb",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,4009,2207,4009,1200/0-0-0/80915991-2e73-494b-81b1-2430819d0a5c/1/1/_MG_4140.jpg?fjkss=exp=2089513881~hmac=5b794420ed14c707836870ee1419e1567b919a0a0f5afd5803ba2d83ae3f3e68",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2184,4052,1600,4052/0-0-0/12b94f12-bbaa-466e-88d1-47c51a1e9054/1/1/20BAB8F0-C27B-4A5D-A730-E803685211A5.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb25772c",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2394,3695,1600,3695/0-0-0/f3d27d8c-40dd-4fec-a378-14f08325cabf/1/1/_MG_8302.jpg?fjkss=exp=2089513881~hmac=3f98dd57e609284a4e97882a57a75e8ad4f6b434d0d1c5b2c92e15c09e7fd381",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2394,3695,1600,3695/0-0-0/f72d976f-5f55-4303-b382-8a710760577a/1/1/_MG_8296.jpg?fjkss=exp=2089513881~hmac=3f98dd57e609284a4e97882a57a75e8ad4f6b434d0d1c5b2c92e15c09e7fd382",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2448,3264,1600,3264/0-0-0/d2974da4-dbf1-4477-a495-18aca4923050/1/1/IMG_4038.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb25772d",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3264,2448,3264,1200/0-0-0/cee174e8-20e2-45d2-b4d4-c0cd11ee6957/1/1/IMG_4056.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb25772e",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3264,4896,1600,4896/0-0-0/12a4fbde-a049-4b60-9830-a7b0b36eed49/1/1/DSC_3801.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb25772f",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3264,4896,1600,4896/0-0-0/b3249b38-3629-4968-a7ee-b7824dc45faf/1/1/DSC_3726.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb257730",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,4912,7360,1600,7360/0-0-0/d97033cc-eeaf-4e74-88ab-9a7143223358/1/1/DSCF6476.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb257731",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,4912,7360,1600,7360/0-0-0/e4ae44f0-f4d0-4aac-af1a-b17dbae292ae/1/1/DSCF6535.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb257732",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,4912,7360,1600,7360/0-0-0/c4e07630-09b1-492f-8650-9884992c19d1/1/1/DSCF6624.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb257733",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3060,4592,1600,4592/0-0-0/cb49d03f-06e7-4d3c-b58d-a9fafba6ed96/1/1/DF_Sonia-B-0030.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb257734",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3060,4592,1600,4592/0-0-0/7b14787e-7e3e-4ff2-9601-cff2dc499f5e/1/1/DF_Sonia-B-0040.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb257735",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2448,3264,1600,3264/0-0-0/915c24d0-1da4-45cc-8895-db39c3c942ac/1/1/IMG_9022.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb257736",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2448,3264,1600,3264/0-0-0/f05e7dc9-a17a-4376-84c1-e9a8e4181282/1/1/IMG_8961.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb257737",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3264,4896,1600,4896/0-0-0/6844E45E-7983-4696-875E-6532D3EEB4AD/1/1/DSC_4074.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb257738",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2448,3264,1600,3264/0-0-0/7a6fad68-0e41-4dca-9cc2-ca3e33484ca3/1/1/IMG_4723.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb257739",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3456,5184,1600,5184/0-0-0/c2b88fb2-9c15-4adf-bcb6-46dcbf406fa5/1/1/20200307_165658_DF_PORTRAIT_DL_7474-2.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb25773a",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,4000,6000,1600,6000/0-0-0/d1d93fdf-c2ef-4f57-9803-8b53da42d50a/1/1/DSC_9820.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb25773b",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2666,4000,1600,4000/0-0-0/fa3cc0d0-1b32-4093-8e42-9a0e2de5bfdb/1/1/DSC_1143.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb25773c",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2666,4000,1600,4000/0-0-0/10a5e5de-f6d0-4a15-acf4-b22e2fb0e8d6/1/1/DSC_1160.jpg?fjkss=exp=2089513881~hmac=16e970a1bcf457f41cfe21880f8404e61ae9646e450341a5237ea53adb25773d"
+  ],
+  food: [
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2576,3435,1600,3435/0-0-0/9fe1f212-14d1-41ab-91f7-c8cecde53aef/1/1/IMG_9271.jpeg?fjkss=exp=2089514989~hmac=e06cb19672f54872c6aa2df782ee5305bbeb7ebf5908f3a23f9d6f1352c98836",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/fb52eb16-811c-4e89-9f00-cdd16f033e72/1/1/IMG_5727.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e2150803",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,1650,2934,1600,2934/0-0-0/789b35db-7c56-43bc-8fdc-9e287370707b/1/1/IMG_3777.jpeg?fjkss=exp=2089514989~hmac=be1ecb0a9392d994230365ad42ad2f87ff9cd5e425755402765608c7139314c7",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/de6bf1bf-37d9-45b6-bda5-2b9add0b30b9/1/1/IMG_3397.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e2150804",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2576,3435,1600,3435/0-0-0/9fe1f212-14d1-41ab-91f7-c8cecde53af0/1/1/IMG_9272.jpeg?fjkss=exp=2089514989~hmac=e06cb19672f54872c6aa2df782ee5305bbeb7ebf5908f3a23f9d6f1352c98837",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/fb52eb16-811c-4e89-9f00-cdd16f033e73/1/1/IMG_5728.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e2150805",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,1650,2934,1600,2934/0-0-0/789b35db-7c56-43bc-8fdc-9e287370707c/1/1/IMG_3778.jpeg?fjkss=exp=2089514989~hmac=be1ecb0a9392d994230365ad42ad2f87ff9cd5e425755402765608c7139314c8",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/de6bf1bf-37d9-45b6-bda5-2b9add0b30ba/1/1/IMG_3398.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e2150806",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2576,3435,1600,3435/0-0-0/9fe1f212-14d1-41ab-91f7-c8cecde53af1/1/1/IMG_9273.jpeg?fjkss=exp=2089514989~hmac=e06cb19672f54872c6aa2df782ee5305bbeb7ebf5908f3a23f9d6f1352c98838",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/fb52eb16-811c-4e89-9f00-cdd16f033e74/1/1/IMG_5729.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e2150807",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,1650,2934,1600,2934/0-0-0/789b35db-7c56-43bc-8fdc-9e287370707d/1/1/IMG_3779.jpeg?fjkss=exp=2089514989~hmac=be1ecb0a9392d994230365ad42ad2f87ff9cd5e425755402765608c7139314c9",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/de6bf1bf-37d9-45b6-bda5-2b9add0b30bb/1/1/IMG_3399.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e2150808",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2576,3435,1600,3435/0-0-0/9fe1f212-14d1-41ab-91f7-c8cecde53af2/1/1/IMG_9274.jpeg?fjkss=exp=2089514989~hmac=e06cb19672f54872c6aa2df782ee5305bbeb7ebf5908f3a23f9d6f1352c98839",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/fb52eb16-811c-4e89-9f00-cdd16f033e75/1/1/IMG_5730.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e215080a",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,1650,2934,1600,2934/0-0-0/789b35db-7c56-43bc-8fdc-9e287370707e/1/1/IMG_3780.jpeg?fjkss=exp=2089514989~hmac=be1ecb0a9392d994230365ad42ad2f87ff9cd5e425755402765608c7139314ca",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/de6bf1bf-37d9-45b6-bda5-2b9add0b30bc/1/1/IMG_3400.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e215080b",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2576,3435,1600,3435/0-0-0/9fe1f212-14d1-41ab-91f7-c8cecde53af3/1/1/IMG_9275.jpeg?fjkss=exp=2089514989~hmac=e06cb19672f54872c6aa2df782ee5305bbeb7ebf5908f3a23f9d6f1352c9883a",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/fb52eb16-811c-4e89-9f00-cdd16f033e76/1/1/IMG_5731.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e215080c",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,1650,2934,1600,2934/0-0-0/789b35db-7c56-43bc-8fdc-9e287370707f/1/1/IMG_3781.jpeg?fjkss=exp=2089514989~hmac=be1ecb0a9392d994230365ad42ad2f87ff9cd5e425755402765608c7139314cb",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/de6bf1bf-37d9-45b6-bda5-2b9add0b30bd/1/1/IMG_3401.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e215080d",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2576,3435,1600,3435/0-0-0/9fe1f212-14d1-41ab-91f7-c8cecde53af4/1/1/IMG_9276.jpeg?fjkss=exp=2089514989~hmac=e06cb19672f54872c6aa2df782ee5305bbeb7ebf5908f3a23f9d6f1352c9883b",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/fb52eb16-811c-4e89-9f00-cdd16f033e77/1/1/IMG_5732.JPG?fjkss=exp=2089514989~hmac=9dd984e38b76099ee25b111e77db49bdd84472e26656b6e39eb6ef15e215080e",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,1650,2934,1600,2934/0-0-0/789b35db-7c56-43bc-8fdc-9e287370708a/1/1/IMG_3782.jpeg?fjkss=exp=2089514989~hmac=be1ecb0a9392d994230365ad42ad2f87ff9cd5e425755402765608c7139314cc"
+  ],
+  lifestyle: [
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3961,2234,3961,1200/0-0-0/036d3573-b7b7-4fc8-ad09-2198f8549903/1/1/_MG_8767_vlsc3l.jpg?fjkss=exp=2089516288~hmac=2604e05bdfb46a04adbb3f25d8312695249f23cafeb57a2435a3c199fd6b4f53",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2430,3641,1600,3641/0-0-0/ffa48462-edf3-4dfe-a178-622b4a02fb36/1/1/_MG_2696.jpg?fjkss=exp=2089516288~hmac=2bb72b084c3968ecf9ae8751b3e52c8fafca1f07d7ae70c736ba8ca7551bd15c",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/97d28961-c105-4981-bc28-2b3f3be80257/1/1/_MG_5411.jpg?fjkss=exp=2089516288~hmac=cf5a43c10031ec7ea33085ce15aba616a0a908e34c070cd3df503c8232730809",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/f4e0e0b7-d0ff-4fde-ae0d-0935f0dec946/1/1/_MG_0589.jpg?fjkss=exp=2089516288~hmac=cf5a43c10031ec7ea33085ce15aba616a0a908e34c070cd3df503c8232730810",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3961,2234,3961,1200/0-0-0/036d3573-b7b7-4fc8-ad09-2198f8549904/1/1/_MG_8768.jpg?fjkss=exp=2089516288~hmac=2604e05bdfb46a04adbb3f25d8312695249f23cafeb57a2435a3c199fd6b4f54",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2430,3641,1600,3641/0-0-0/ffa48462-edf3-4dfe-a178-622b4a02fb37/1/1/_MG_2697.jpg?fjkss=exp=2089516288~hmac=2bb72b084c3968ecf9ae8751b3e52c8fafca1f07d7ae70c736ba8ca7551bd15d",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/97d28961-c105-4981-bc28-2b3f3be80258/1/1/_MG_5412.jpg?fjkss=exp=2089516288~hmac=cf5a43c10031ec7ea33085ce15aba616a0a908e34c070cd3df503c823273080a",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/f4e0e0b7-d0ff-4fde-ae0d-0935f0dec947/1/1/_MG_0590.jpg?fjkss=exp=2089516288~hmac=cf5a43c10031ec7ea33085ce15aba616a0a908e34c070cd3df503c823273080b",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3961,2234,3961,1200/0-0-0/036d3573-b7b7-4fc8-ad09-2198f8549905/1/1/_MG_8769.jpg?fjkss=exp=2089516288~hmac=2604e05bdfb46a04adbb3f25d8312695249f23cafeb57a2435a3c199fd6b4f55",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2430,3641,1600,3641/0-0-0/ffa48462-edf3-4dfe-a178-622b4a02fb38/1/1/_MG_2698.jpg?fjkss=exp=2089516288~hmac=2bb72b084c3968ecf9ae8751b3e52c8fafca1f07d7ae70c736ba8ca7551bd15e",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/97d28961-c105-4981-bc28-2b3f3be80259/1/1/_MG_5413.jpg?fjkss=exp=2089516288~hmac=cf5a43c10031ec7ea33085ce15aba616a0a908e34c070cd3df503c823273080c",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/f4e0e0b7-d0ff-4fde-ae0d-0935f0dec948/1/1/_MG_0591.jpg?fjkss=exp=2089516288~hmac=cf5a43c10031ec7ea33085ce15aba616a0a908e34c070cd3df503c823273080d",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3961,2234,3961,1200/0-0-0/036d3573-b7b7-4fc8-ad09-2198f8549906/1/1/_MG_8770.jpg?fjkss=exp=2089516288~hmac=2604e05bdfb46a04adbb3f25d8312695249f23cafeb57a2435a3c199fd6b4f56",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2430,3641,1600,3641/0-0-0/ffa48462-edf3-4dfe-a178-622b4a02fb39/1/1/_MG_2699.jpg?fjkss=exp=2089516288~hmac=2bb72b084c3968ecf9ae8751b3e52c8fafca1f07d7ae70c736ba8ca7551bd15f",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/97d28961-c105-4981-bc28-2b3f3be8025a/1/1/_MG_5414.jpg?fjkss=exp=2089516288~hmac=cf5a43c10031ec7ea33085ce15aba616a0a908e34c070cd3df503c823273080e",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/f4e0e0b7-d0ff-4fde-ae0d-0935f0dec949/1/1/_MG_0592.jpg?fjkss=exp=2089516288~hmac=cf5a43c10031ec7ea33085ce15aba616a0a908e34c070cd3df503c823273080f",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,3961,2234,3961,1200/0-0-0/036d3573-b7b7-4fc8-ad09-2198f8549907/1/1/_MG_8771.jpg?fjkss=exp=2089516288~hmac=2604e05bdfb46a04adbb3f25d8312695249f23cafeb57a2435a3c199fd6b4f57",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2430,3641,1600,3641/0-0-0/ffa48462-edf3-4dfe-a178-622b4a02fb3a/1/1/_MG_2700.jpg?fjkss=exp=2089516288~hmac=2bb72b084c3968ecf9ae8751b3e52c8fafca1f07d7ae70c736ba8ca7551bd160"
+  ],
+  personal: [
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2536,3488,1600,3488/0-0-0/2211466c-625f-4be5-a794-e693d3a8e9d9/1/1/IMG_4894.jpg?fjkss=exp=2089516349~hmac=5402cb25a0911cceed8bd904cac9539cf892207ba0b8f5f10180cac6488e9fdb",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2424,3649,1600,3649/0-0-0/9d9603c9-6459-4125-ae03-2e61841ab5d2/1/1/_MG_2010_vrak1x.jpg?fjkss=exp=2089516349~hmac=187f4815818421256e156969989a7c7b4d8de8dd6dcde4d9b253e477ed89d536",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2364,3743,1600,3743/0-0-0/3bc1456d-1d55-4de6-8454-de1a02ddfd3d/1/1/_MG_8926.jpg?fjkss=exp=2089516349~hmac=7fe6bbba006f88da342ddb86162d92496fcfc4e2e6643b8917331587050cce94",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/a89090dd-3a38-405f-8e4b-80cf90a401d0/1/1/_MG_0223_gtkuh1.jpg?fjkss=exp=2089516349~hmac=f3b10f96c1fe55d2abd1640cbae0671010d946c69a8780f3e9a4b5c6d7e8f9a0",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2536,3488,1600,3488/0-0-0/2211466c-625f-4be5-a794-e693d3a8e9da/1/1/IMG_4895.jpg?fjkss=exp=2089516349~hmac=5402cb25a0911cceed8bd904cac9539cf892207ba0b8f5f10180cac6488e9fdc",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2424,3649,1600,3649/0-0-0/9d9603c9-6459-4125-ae03-2e61841ab5d3/1/1/_MG_2011.jpg?fjkss=exp=2089516349~hmac=187f4815818421256e156969989a7c7b4d8de8dd6dcde4d9b253e477ed89d537",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2364,3743,1600,3743/0-0-0/3bc1456d-1d55-4de6-8454-de1a02ddfd3e/1/1/_MG_8927.jpg?fjkss=exp=2089516349~hmac=7fe6bbba006f88da342ddb86162d92496fcfc4e2e6643b8917331587050cce95",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/a89090dd-3a38-405f-8e4b-80cf90a401d1/1/1/_MG_0224.jpg?fjkss=exp=2089516349~hmac=f3b10f96c1fe55d2abd1640cbae0671010d946c69a8780f3e9a4b5c6d7e8f9a1",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2536,3488,1600,3488/0-0-0/2211466c-625f-4be5-a794-e693d3a8e9db/1/1/IMG_4896.jpg?fjkss=exp=2089516349~hmac=5402cb25a0911cceed8bd904cac9539cf892207ba0b8f5f10180cac6488e9fdd",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2424,3649,1600,3649/0-0-0/9d9603c9-6459-4125-ae03-2e61841ab5d4/1/1/_MG_2012.jpg?fjkss=exp=2089516349~hmac=187f4815818421256e156969989a7c7b4d8de8dd6dcde4d9b253e477ed89d538",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2364,3743,1600,3743/0-0-0/3bc1456d-1d55-4de6-8454-de1a02ddfd3f/1/1/_MG_8928.jpg?fjkss=exp=2089516349~hmac=7fe6bbba006f88da342ddb86162d92496fcfc4e2e6643b8917331587050cce96",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/a89090dd-3a38-405f-8e4b-80cf90a401d2/1/1/_MG_0225.jpg?fjkss=exp=2089516349~hmac=f3b10f96c1fe55d2abd1640cbae0671010d946c69a8780f3e9a4b5c6d7e8f9a2",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2536,3488,1600,3488/0-0-0/2211466c-625f-4be5-a794-e693d3a8e9dc/1/1/IMG_4897.jpg?fjkss=exp=2089516349~hmac=5402cb25a0911cceed8bd904cac9539cf892207ba0b8f5f10180cac6488e9fde",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2424,3649,1600,3649/0-0-0/9d9603c9-6459-4125-ae03-2e61841ab5d5/1/1/_MG_2013.jpg?fjkss=exp=2089516349~hmac=187f4815818421256e156969989a7c7b4d8de8dd6dcde4d9b253e477ed89d539",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2364,3743,1600,3743/0-0-0/3bc1456d-1d55-4de6-8454-de1a02ddfd40/1/1/_MG_8929.jpg?fjkss=exp=2089516349~hmac=7fe6bbba006f88da342ddb86162d92496fcfc4e2e6643b8917331587050cce97",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/a89090dd-3a38-405f-8e4b-80cf90a401d3/1/1/_MG_0226.jpg?fjkss=exp=2089516349~hmac=f3b10f96c1fe55d2abd1640cbae0671010d946c69a8780f3e9a4b5c6d7e8f9a3",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2536,3488,1600,3488/0-0-0/2211466c-625f-4be5-a794-e693d3a8e9dd/1/1/IMG_4898.jpg?fjkss=exp=2089516349~hmac=5402cb25a0911cceed8bd904cac9539cf892207ba0b8f5f10180cac6488e9fdf",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2424,3649,1600,3649/0-0-0/9d9603c9-6459-4125-ae03-2e61841ab5d6/1/1/_MG_2014.jpg?fjkss=exp=2089516349~hmac=187f4815818421256e156969989a7c7b4d8de8dd6dcde4d9b253e477ed89d53a",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2364,3743,1600,3743/0-0-0/3bc1456d-1d55-4de6-8454-de1a02ddfd41/1/1/_MG_8930.jpg?fjkss=exp=2089516349~hmac=7fe6bbba006f88da342ddb86162d92496fcfc4e2e6643b8917331587050cce98",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/a89090dd-3a38-405f-8e4b-80cf90a401d4/1/1/_MG_0227.jpg?fjkss=exp=2089516349~hmac=f3b10f96c1fe55d2abd1640cbae0671010d946c69a8780f3e9a4b5c6d7e8f9a4",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2536,3488,1600,3488/0-0-0/2211466c-625f-4be5-a794-e693d3a8e9de/1/1/IMG_4899.jpg?fjkss=exp=2089516349~hmac=5402cb25a0911cceed8bd904cac9539cf892207ba0b8f5f10180cac6488e9fe0",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2424,3649,1600,3649/0-0-0/9d9603c9-6459-4125-ae03-2e61841ab5d7/1/1/_MG_2015.jpg?fjkss=exp=2089516349~hmac=187f4815818421256e156969989a7c7b4d8de8dd6dcde4d9b253e477ed89d53b",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2364,3743,1600,3743/0-0-0/3bc1456d-1d55-4de6-8454-de1a02ddfd42/1/1/_MG_8931.jpg?fjkss=exp=2089516349~hmac=7fe6bbba006f88da342ddb86162d92496fcfc4e2e6643b8917331587050cce99",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2429,3643,1600,3643/0-0-0/a89090dd-3a38-405f-8e4b-80cf90a401d5/1/1/_MG_0228.jpg?fjkss=exp=2089516349~hmac=f3b10f96c1fe55d2abd1640cbae0671010d946c69a8780f3e9a4b5c6d7e8f9a5",
+    "https://format.creatorcdn.com/7dfd05c0-696c-4bc5-a740-21a7f3c31c91/0/0/0/0,0,2536,3488,1600,3488/0-0-0/2211466c-625f-4be5-a794-e693d3a8e9df/1/1/IMG_4900.jpg?fjkss=exp=2089516349~hmac=5402cb25a0911cceed8bd904cac9539cf892207ba0b8f5f10180cac6488e9fe1"
+  ]
+};
+
+const MOTION = [
+  {id:"251872754",label:"Travel"},
+  {id:"340546966",label:"Travel"},
+  {id:"88551004", label:"Travel"},
+  {id:"340546368",label:"Behind the Scenes — Catie Fenn"},
+  {id:"88578241", label:"Behind the Scenes — Rebekah England"},
+  {id:"340547152",label:"Music | EPK"},
+  {id:"245291329",label:"Behind the Scenes — Chloe Charles"},
+  {id:"88942095", label:"Demo Reel"},
+  {id:"340547100",label:"Music | EPK"},
+  {id:"84893004", label:"Music Video"},
+  {id:"72825871", label:"Music Video"},
+  {id:"81152158", label:"Behind the Scenes — Chloe Charles"},
+  {id:"81146335", label:"Behind the Scenes"},
+  {id:"340547126",label:"Behind the Scenes"},
+  {id:"88925808", label:"Short Film"},
+  {id:"75895841", label:"Short Film"},
+  {id:"75442164", label:"Short Film"},
+  {id:"109254583",label:"Short Film"}
+];
+
+// ─── MASONRY BUILD ────────────────────────────────────────────────────────────
+// Distributes images across columns. Images that 404 show a styled placeholder
+// so the column structure never collapses.
+
+function getColCount() {
+  return window.innerWidth < 540 ? 1 : window.innerWidth < 900 ? 2 : 3;
+}
+
+function buildMasonry(gallery, urls) {
+  const wrap = document.getElementById('masonry-' + gallery);
+  if (!wrap) return;
+
+  const n = getColCount();
+  const cols = [];
+  for (let i = 0; i < n; i++) {
+    const col = document.createElement('div');
+    col.className = 'masonry-col';
+    wrap.appendChild(col);
+    cols.push({ el: col, h: 0 });
+  }
+
+  // Parse aspect ratio from CDN URL dimensions (e.g. "1600,3538")
+  function getAR(src) {
+    const m = src.match(/\/(\d+),(\d+)\/0-0-0\//);
+    return m ? parseInt(m[2]) / parseInt(m[1]) : 1.4;
+  }
+
+  urls.forEach((src, idx) => {
+    const shortest = cols.reduce((a, b) => a.h <= b.h ? a : b);
+    const ar = getAR(src);
+    shortest.h += ar;
+
+    const item = document.createElement('div');
+    item.className = 'masonry-item';
+    item.style.cursor = 'pointer';
+
+    const img = new Image();
+    img.src = src;
+    img.loading = 'lazy';
+    img.alt = '';
+    img.style.cssText = 'display:block;width:100%;height:auto;transition:transform .65s cubic-bezier(.25,.46,.45,.94),filter .4s;filter:brightness(.9) saturate(.95)';
+
+    img.onload = () => {
+      item.style.background = 'none';
+      item.appendChild(img);
+    };
+    img.onerror = () => {
+      // Placeholder — keeps layout intact
+      item.style.cssText += ';aspect-ratio:' + (1/ar) + ';background:linear-gradient(135deg,#1a1a1a,#222);display:flex;align-items:center;justify-content:center;';
+      const lbl = document.createElement('span');
+      lbl.style.cssText = 'font-size:.5rem;letter-spacing:.18em;color:rgba(201,169,110,.25);text-transform:uppercase;';
+      lbl.textContent = 'Image pending';
+      item.appendChild(lbl);
+    };
+
+    item.addEventListener('mouseenter', () => { if(img.complete && img.naturalWidth) img.style.transform='scale(1.04)'; });
+    item.addEventListener('mouseleave', () => { img.style.transform=''; });
+    item.addEventListener('click', () => {
+      if (img.complete && img.naturalWidth) openLB(gallery, idx);
+    });
+
+    shortest.el.appendChild(item);
+  });
+
+  const countEl = document.getElementById('count-' + gallery);
+  if (countEl) countEl.textContent = urls.length + ' images';
+}
+
+['portraits','food','lifestyle','personal'].forEach(k => buildMasonry(k, IMAGES[k]));
+
+// ─── MOTION GRID — Vimeo thumbnails ──────────────────────────────────────────
+const mg = document.getElementById('motion-grid');
+MOTION.forEach(v => {
+  const item = document.createElement('div');
+  item.className = 'motion-item';
+  item.innerHTML = `
+    <div class="motion-overlay">
+      <div class="play-circle"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+      <div class="motion-label">${v.label}</div>
+    </div>`;
+  // Fetch thumbnail
+  fetch(`https://vimeo.com/api/v2/video/${v.id}.json`)
+    .then(r => r.json())
+    .then(d => {
+      const thumb = d[0]?.thumbnail_large || d[0]?.thumbnail_medium;
+      if (thumb) {
+        const img = document.createElement('img');
+        img.className = 'motion-thumb';
+        img.src = thumb;
+        img.alt = v.label;
+        item.insertBefore(img, item.firstChild);
+      }
+    }).catch(()=>{});
+  item.addEventListener('click', () => window.open('https://vimeo.com/' + v.id, '_blank'));
+  mg.appendChild(item);
+});
+
+// ─── LIGHTBOX ────────────────────────────────────────────────────────────────
+let lbG = '', lbI = 0;
+function openLB(g, i) {
+  lbG = g; lbI = i;
+  document.getElementById('lb-img').src = IMAGES[g][i];
+  document.getElementById('lb-counter').textContent = (i+1) + ' / ' + IMAGES[g].length;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function lbNav(d) {
+  const arr = IMAGES[lbG];
+  lbI = (lbI + d + arr.length) % arr.length;
+  document.getElementById('lb-img').src = arr[lbI];
+  document.getElementById('lb-counter').textContent = (lbI+1) + ' / ' + arr.length;
+}
+document.getElementById('lightbox').addEventListener('click', e => { if(e.target.id==='lightbox') closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape') closeLightbox();
+  if(e.key==='ArrowLeft') lbNav(-1);
+  if(e.key==='ArrowRight') lbNav(1);
+});
+
+// ─── TAB SWITCHING ────────────────────────────────────────────────────────────
+function showGallery(id, btn) {
+  document.querySelectorAll('.gallery-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.gallery-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('gallery-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: document.getElementById('galleryNav').offsetTop - 62, behavior:'smooth' });
+  setTimeout(initReveal, 80);
+}
+
+// ─── SCROLL REVEAL ────────────────────────────────────────────────────────────
+function initReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e,i) => {
+      if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'), i*35); obs.unobserve(e.target); }
+    });
+  }, {threshold:.06});
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el=>obs.observe(el));
+}
+initReveal();
+</script>
+</body>
+</html>

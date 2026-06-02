@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photography — Chef Desh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Tenor+Sans&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:      #0f1c2e;
+      --navy-mid:  #152238;
+      --burgundy:  #6B1A2A;
+      --gold:      #C9A96E;
+      --gold-lt:   #E2C28A;
+      --cream:     #F5F0E8;
+      --cream-dk:  #E8E0D0;
+      --muted:     rgba(245,240,232,0.55);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--cream); overflow-x: hidden; min-height: 100vh; }
+    body.custom-cursor, body.custom-cursor * { cursor: none !important; }
+
+    /* Cursor */
+    #cursor { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.08s ease; }
+    #cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid var(--gold); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.18s ease; opacity: 0.5; }
+
+    /* Grain */
+    body::after { content: ''; position: fixed; inset: 0; z-index: 9000; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity: 0.025; }
+
+    /* Nav */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 1.8rem 5rem; transition: all 0.4s ease; background: rgba(15,28,46,0.5); backdrop-filter: blur(10px); }
+    nav.scrolled { background: rgba(15,28,46,0.97); backdrop-filter: blur(20px); padding: 1.1rem 5rem; border-bottom: 1px solid rgba(201,169,110,0.12); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream); text-decoration: none; }
+    .nav-logo span { color: var(--gold); font-style: italic; }
+    .nav-links { display: flex; gap: 2.8rem; align-items: center; }
+    .nav-links a { font-size: 0.67rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 300; color: var(--muted); text-decoration: none; position: relative; padding-bottom: 4px; transition: color 0.3s; }
+    .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.35s ease; }
+    .nav-links a:hover { color: var(--gold-lt); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after { width: 100%; }
+    .nav-cta { color: var(--navy) !important; background: var(--gold); padding: 0.6rem 1.4rem; transition: background 0.3s !important; }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover { background: var(--gold-lt) !important; }
+
+    /* View system — hero vs gallery */
+    .view { display: none; opacity: 0; transition: opacity 0.5s ease; }
+    .view.active { display: block; opacity: 1; }
+
+    /* HERO CHOOSER */
+    #hero { min-height: 100vh; padding-top: 4rem; display: flex; flex-direction: column; }
+    .hero-header { text-align: center; padding: 1rem 2rem 2rem; }
+    .hero-tag { font-size: 0.6rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; display: inline-flex; align-items: center; gap: 1rem; }
+    .hero-tag::before, .hero-tag::after { content: ''; width: 2rem; height: 1px; background: var(--gold); }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.05; color: var(--cream); }
+    .hero-title em { font-style: italic; color: var(--gold-lt); }
+    .hero-sub { font-size: 0.9rem; font-weight: 200; line-height: 1.9; color: var(--muted); max-width: 52ch; margin: 1.5rem auto 0; }
+
+    .chooser-grid { display: grid; grid-template-columns: repeat(4, 1fr); flex: 1; min-height: 520px; }
+    .chooser-card { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem 2rem; min-height: 520px; text-decoration: none; cursor: none; border: none; background: transparent; text-align: left; font-family: inherit; color: inherit; }
+    .chooser-img { position: absolute; inset: 0; }
+    .chooser-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 0.7s ease; }
+    .chooser-card:hover .chooser-img img { transform: scale(1.07); }
+    .chooser-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%); transition: background 0.4s; }
+    .chooser-card:hover .chooser-overlay { background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.15) 100%); }
+    .chooser-divider { position: absolute; top: 0; right: 0; bottom: 0; width: 1px; background: rgba(201,169,110,0.2); }
+    .chooser-content { position: relative; z-index: 2; }
+    .chooser-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: rgba(201,169,110,0.2); line-height: 1; margin-bottom: 0.8rem; }
+    .chooser-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: var(--cream); margin-bottom: 0.5rem; line-height: 1.2; }
+    .chooser-sub { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem; }
+    .chooser-arrow { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-top: 1rem; transform: translateX(-10px); transition: transform 0.3s, opacity 0.3s; opacity: 0; }
+    .chooser-card:hover .chooser-arrow { transform: translateX(0); opacity: 1; }
+
+    /* GALLERY */
+    .gallery { padding: 8rem 5rem 6rem; min-height: 100vh; }
+    .gallery-header { max-width: 1400px; margin: 0 auto 3.5rem; display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .gallery-title-block { flex: 1; min-width: 280px; }
+    .gallery-label { font-size: 0.6rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
+    .gallery-label::before { content: ''; width: 2rem; height: 1px; background: var(--gold); }
+    .gallery-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 300; line-height: 1.1; color: var(--cream); }
+    .gallery-title em { font-style: italic; color: var(--gold-lt); }
+    .back-btn { font-family: 'Jost', sans-serif; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; font-weight: 300; color: var(--muted); background: transparent; border: 1px solid rgba(245,240,232,0.2); padding: 0.9rem 1.8rem; cursor: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.6rem; }
+    .back-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    .gallery-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .gallery-item { overflow: hidden; position: relative; aspect-ratio: 3/2; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .gallery-item:hover img { transform: scale(1.03); }
+    .gallery-empty { text-align: center; padding: 4rem 2rem; color: var(--muted); font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; border: 1px solid rgba(245,240,232,0.08); }
+
+    /* Footer */
+    footer { background: #060d18; padding: 3rem 7rem; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(201,169,110,0.1); margin-top: 4rem; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream); }
+    .footer-logo span { color: var(--gold); font-style: italic; }
+    .footer-copy { font-size: 0.62rem; letter-spacing: 0.15em; color: rgba(245,240,232,0.28); }
+    .footer-social { display: flex; gap: 1.5rem; }
+    .footer-social a { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,240,232,0.38); text-decoration: none; transition: color 0.3s; }
+    .footer-social a:hover { color: var(--gold); }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      nav { padding: 1.5rem 2rem; }
+      nav.scrolled { padding: 1rem 2rem; }
+      .nav-links { gap: 1.5rem; }
+      .chooser-grid { grid-template-columns: 1fr 1fr; }
+      .gallery { padding: 7rem 2rem 5rem; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; padding: 2.5rem 2rem; }
+    }
+    @media (max-width: 700px) {
+      .chooser-grid { grid-template-columns: 1fr; }
+      .chooser-card { min-height: 340px; }
+      .nav-links { display: none; }
+      .hero-title { font-size: 2rem; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item { aspect-ratio: 4/3; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">Chef <span>Desh</span></a>
+    <div class="nav-links">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#worlds">Worlds</a>
+      <a href="index.html#about">About</a>
+      <a href="photography.html" class="active">Photography</a>
+      <a href="https://deepcovewinery.ca/upcoming-events/" target="_blank" rel="noopener">Workshop</a>
+      <a href="https://wildkitchen.show" target="_blank" rel="noopener">Wild Kitchen</a>
+      <a href="index.html#contact" class="nav-cta">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO CHOOSER -->
+  <section id="hero" class="view active">
+    <div class="hero-header">
+      <div class="hero-tag">Through the Lens</div>
+      <h1 class="hero-title">Pick Your <em>Story</em></h1>
+      <p class="hero-sub">A visual journey through food, people, and the moments in between — shot with the same precision I bring to the kitchen.</p>
+    </div>
+    <div class="chooser-grid">
+
+      <button type="button" class="chooser-card" data-gallery="food">
+        <div class="chooser-img"><img src="food.jpg" alt="Food" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-divider"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">01</div>
+          <div class="chooser-sub">Plated · Rustic · Wild</div>
+          <h3 class="chooser-title">Food</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </button>
+
+      <button type="button" class="chooser-card" data-gallery="portraits">
+        <div class="chooser-img"><img src="portraits.jpg" alt="Portraits" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-divider"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">02</div>
+          <div class="chooser-sub">People · Character · Light</div>
+          <h3 class="chooser-title">Portraits</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </button>
+
+      <button type="button" class="chooser-card" data-gallery="lifestyle">
+        <div class="chooser-img"><img src="lifestyle.jpg" alt="Lifestyle" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-divider"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">03</div>
+          <div class="chooser-sub">Moments · Movement · Mood</div>
+          <h3 class="chooser-title">Lifestyle</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </button>
+
+      <button type="button" class="chooser-card" data-gallery="personal">
+        <div class="chooser-img"><img src="personal.jpg" alt="Personal" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">04</div>
+          <div class="chooser-sub">Adventure · Wild · Home</div>
+          <h3 class="chooser-title">Personal</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- FOOD GALLERY -->
+  <section id="gallery-food" class="view gallery">
+    <div class="gallery-header">
+      <div class="gallery-title-block">
+        <div class="gallery-label">Gallery · 01</div>
+        <h2 class="gallery-title">Food <em>Photography</em></h2>
+      </div>
+      <button type="button" class="back-btn" onclick="showHero()">← Back to Categories</button>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="food-1.jpeg" alt="Food 1" /></div>
+      <div class="gallery-item"><img src="food-2.jpeg" alt="Food 2" /></div>
+      <div class="gallery-item"><img src="food-3.jpg" alt="Food 3" /></div>
+      <div class="gallery-item"><img src="food-4.jpg" alt="Food 4" /></div>
+      <div class="gallery-item"><img src="food-5.jpeg" alt="Food 5" /></div>
+      <div class="gallery-item"><img src="food-6.jpg" alt="Food 6" /></div>
+      <div class="gallery-item"><img src="food-7.jpg" alt="Food 7" /></div>
+      <div class="gallery-item"><img src="food-8.jpg" alt="Food 8" /></div>
+      <div class="gallery-item"><img src="food-9.jpg" alt="Food 9" /></div>
+      <div class="gallery-item"><img src="food-10.jpeg" alt="Food 10" /></div>
+      <div class="gallery-item"><img src="food-11.jpeg" alt="Food 11" /></div>
+      <div class="gallery-item"><img src="food-12.jpeg" alt="Food 12" /></div>
+      <div class="gallery-item"><img src="food-13.jpeg" alt="Food 13" /></div>
+      <div class="gallery-item"><img src="food-14.jpeg" alt="Food 14" /></div>
+      <div class="gallery-item"><img src="food-15.jpeg" alt="Food 15" /></div>
+    </div>
+  </section>
+
+  <!-- PORTRAITS GALLERY -->
+  <section id="gallery-portraits" class="view gallery">
+    <div class="gallery-header">
+      <div class="gallery-title-block">
+        <div class="gallery-label">Gallery · 02</div>
+        <h2 class="gallery-title">Portrait <em>Photography</em></h2>
+      </div>
+      <button type="button" class="back-btn" onclick="showHero()">← Back to Categories</button>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="portraits-1.jpg" alt="Portrait 1" /></div>
+      <div class="gallery-item"><img src="portraits-2.jpg" alt="Portrait 2" /></div>
+      <div class="gallery-item"><img src="portraits-3.jpg" alt="Portrait 3" /></div>
+      <div class="gallery-item"><img src="portraits-4.jpg" alt="Portrait 4" /></div>
+      <div class="gallery-item"><img src="portraits-5.jpg" alt="Portrait 5" /></div>
+      <div class="gallery-item"><img src="portraits-6.jpg" alt="Portrait 6" /></div>
+      <div class="gallery-item"><img src="portraits-7.jpg" alt="Portrait 7" /></div>
+      <div class="gallery-item"><img src="portraits-8.jpg" alt="Portrait 8" /></div>
+      <div class="gallery-item"><img src="portraits-9.jpg" alt="Portrait 9" /></div>
+      <div class="gallery-item"><img src="portraits-10.jpg" alt="Portrait 10" /></div>
+      <div class="gallery-item"><img src="portraits-11.jpg" alt="Portrait 11" /></div>
+      <div class="gallery-item"><img src="portraits-12.jpg" alt="Portrait 12" /></div>
+      <div class="gallery-item"><img src="portraits-13.jpg" alt="Portrait 13" /></div>
+      <div class="gallery-item"><img src="portraits-14.jpg" alt="Portrait 14" /></div>
+      <div class="gallery-item"><img src="portraits-15.jpg" alt="Portrait 15" /></div>
+    </div>
+  </section>
+
+  <!-- LIFESTYLE GALLERY -->
+  <section id="gallery-lifestyle" class="view gallery">
+    <div class="gallery-header">
+      <div class="gallery-title-block">
+        <div class="gallery-label">Gallery · 03</div>
+        <h2 class="gallery-title">Lifestyle <em>Photography</em></h2>
+      </div>
+      <button type="button" class="back-btn" onclick="showHero()">← Back to Categories</button>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="lifestyle-1.jpg" alt="Lifestyle 1" /></div>
+      <div class="gallery-item"><img src="lifestyle-2.jpg" alt="Lifestyle 2" /></div>
+      <div class="gallery-item"><img src="lifestyle-3.jpg" alt="Lifestyle 3" /></div>
+      <div class="gallery-item"><img src="lifestyle-4.jpg" alt="Lifestyle 4" /></div>
+      <div class="gallery-item"><img src="lifestyle-5.jpg" alt="Lifestyle 5" /></div>
+      <div class="gallery-item"><img src="lifestyle-6.jpg" alt="Lifestyle 6" /></div>
+      <div class="gallery-item"><img src="lifestyle-7.jpg" alt="Lifestyle 7" /></div>
+      <div class="gallery-item"><img src="lifestyle-8.jpg" alt="Lifestyle 8" /></div>
+      <div class="gallery-item"><img src="lifestyle-9.jpg" alt="Lifestyle 9" /></div>
+      <div class="gallery-item"><img src="lifestyle-10.jpg" alt="Lifestyle 10" /></div>
+      <div class="gallery-item"><img src="lifestyle-11.jpg" alt="Lifestyle 11" /></div>
+      <div class="gallery-item"><img src="lifestyle-12.jpg" alt="Lifestyle 12" /></div>
+      <div class="gallery-item"><img src="lifestyle-13.jpg" alt="Lifestyle 13" /></div>
+      <div class="gallery-item"><img src="lifestyle-14.jpg" alt="Lifestyle 14" /></div>
+      <div class="gallery-item"><img src="lifestyle-15.jpg" alt="Lifestyle 15" /></div>
+    </div>
+  </section>
+
+  <!-- PERSONAL GALLERY -->
+  <section id="gallery-personal" class="view gallery">
+    <div class="gallery-header">
+      <div class="gallery-title-block">
+        <div class="gallery-label">Gallery · 04</div>
+        <h2 class="gallery-title">Personal <em>Work</em></h2>
+      </div>
+      <button type="button" class="back-btn" onclick="showHero()">← Back to Categories</button>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="personal-1.jpg" alt="Personal 1" /></div>
+      <div class="gallery-item"><img src="personal-2.jpg" alt="Personal 2" /></div>
+      <div class="gallery-item"><img src="personal-3.jpg" alt="Personal 3" /></div>
+      <div class="gallery-item"><img src="personal-4.jpg" alt="Personal 4" /></div>
+      <div class="gallery-item"><img src="personal-5.jpg" alt="Personal 5" /></div>
+      <div class="gallery-item"><img src="personal-6.jpg" alt="Personal 6" /></div>
+      <div class="gallery-item"><img src="personal-7.jpg" alt="Personal 7" /></div>
+      <div class="gallery-item"><img src="personal-8.jpg" alt="Personal 8" /></div>
+      <div class="gallery-item"><img src="personal-9.jpg" alt="Personal 9" /></div>
+      <div class="gallery-item"><img src="personal-10.jpg" alt="Personal 10" /></div>
+      <div class="gallery-item"><img src="personal-11.jpg" alt="Personal 11" /></div>
+      <div class="gallery-item"><img src="personal-12.jpg" alt="Personal 12" /></div>
+      <div class="gallery-item"><img src="personal-13.jpg" alt="Personal 13" /></div>
+      <div class="gallery-item"><img src="personal-14.jpg" alt="Personal 14" /></div>
+      <div class="gallery-item"><img src="personal-15.jpg" alt="Personal 15" /></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Chef <span>Desh</span></div>
+    <div class="footer-copy">© 2026 Desh Fernando. All rights reserved.</div>
+    <div class="footer-social">
+      <a href="https://deshfernando.com" target="_blank">Portfolio</a>
+      <a href="https://torontosourdoughworkshop.com" target="_blank">Workshop</a>
+      <a href="https://wildkitchen.show" target="_blank">Wild Kitchen</a>
+      <a href="https://www.instagram.com/Chef_Desh_Adventure_Cooking/" target="_blank">Instagram</a>
+    </div>
+  </footer>
+
+  <script>
+    // View switcher
+    function showView(id) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      var el = document.getElementById(id);
+      if (el) el.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+    function showHero() { showView('hero'); }
+
+    // Wire up card clicks
+    document.querySelectorAll('.chooser-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var cat = card.getAttribute('data-gallery');
+        showView('gallery-' + cat);
+      });
+    });
+
+    // Nav scroll state
+    var nav = document.getElementById('nav');
+    window.addEventListener('scroll', function() {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Cursor
+    (function() {
+      var cur = document.getElementById('cursor');
+      var ring = document.getElementById('cursor-ring');
+      if (!cur || !ring) return;
+      cur.style.left = '-200px'; cur.style.top = '-200px';
+      ring.style.left = '-200px'; ring.style.top = '-200px';
+      document.addEventListener('mousemove', function(e) {
+        document.body.classList.add('custom-cursor');
+        cur.style.left = e.clientX + 'px';
+        cur.style.top  = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top  = e.clientY + 'px';
+      });
+      document.querySelectorAll('a, button').forEach(function(el) {
+        el.addEventListener('mouseenter', function() { ring.style.width='52px'; ring.style.height='52px'; ring.style.opacity='0.9'; });
+        el.addEventListener('mouseleave', function() { ring.style.width='32px'; ring.style.height='32px'; ring.style.opacity='0.5'; });
+      });
+    })();
+  </script>
+
+</body>
+</html>

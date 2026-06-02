@@ -50,7 +50,8 @@
     .view.active { display: block; opacity: 1; }
 
     /* HERO CHOOSER */
-    #hero { min-height: 100vh; padding-top: 4rem; display: flex; flex-direction: column; }
+    #hero { min-height: 100vh; padding-top: 4rem; flex-direction: column; }
+    #hero.view.active { display: flex; }
     .hero-header { text-align: center; padding: 1rem 2rem 2rem; }
     .hero-tag { font-size: 0.6rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; display: inline-flex; align-items: center; gap: 1rem; }
     .hero-tag::before, .hero-tag::after { content: ''; width: 2rem; height: 1px; background: var(--gold); }

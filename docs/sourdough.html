@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sourdough Workshop — Chef Desh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Tenor+Sans&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:      #0f1c2e;
+      --navy-mid:  #152238;
+      --gold:      #C9A96E;
+      --gold-lt:   #E2C28A;
+      --cream:     #F5F0E8;
+      --cream-dk:  #E8E0D0;
+      --muted:     rgba(245,240,232,0.55);
+      --forest:    #1E3A2F;
+      --forest-lt: #2A5241;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--navy); color: var(--cream); overflow-x: hidden; }
+    body.custom-cursor, body.custom-cursor * { cursor: none !important; }
+
+    /* Cursor */
+    #cursor { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.08s ease; }
+    #cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid var(--gold); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.18s ease; opacity: 0.5; }
+
+    /* Grain */
+    body::after { content: ''; position: fixed; inset: 0; z-index: 9000; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity: 0.025; }
+
+    /* Nav */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 1.8rem 5rem; transition: all 0.4s ease; background: rgba(15,28,46,0.5); backdrop-filter: blur(10px); }
+    nav.scrolled { background: rgba(15,28,46,0.97); backdrop-filter: blur(20px); padding: 1.1rem 5rem; border-bottom: 1px solid rgba(201,169,110,0.12); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream); text-decoration: none; }
+    .nav-logo span { color: var(--gold); font-style: italic; }
+    .nav-links { display: flex; gap: 2.8rem; align-items: center; }
+    .nav-links a { font-size: 0.67rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 300; color: var(--muted); text-decoration: none; position: relative; padding-bottom: 4px; transition: color 0.3s; }
+    .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.35s ease; }
+    .nav-links a:hover { color: var(--gold-lt); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after { width: 100%; }
+    .nav-cta { color: var(--navy) !important; background: var(--gold); padding: 0.6rem 1.4rem; transition: background 0.3s !important; }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover { background: var(--gold-lt) !important; }
+
+    /* Hero */
+    #hero { min-height: 100vh; position: relative; display: flex; align-items: flex-end; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; }
+    .hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,28,46,0.97) 0%, rgba(15,28,46,0.55) 50%, rgba(15,28,46,0.2) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 0 7rem 8rem; max-width: 800px; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 1rem; font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards; }
+    .hero-tag::before { content: ''; width: 2.5rem; height: 1px; background: var(--gold); }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 5.5vw, 5.5rem); font-weight: 300; line-height: 1.05; color: var(--cream); margin-bottom: 0.3rem; opacity: 0; animation: fadeUp 0.9s ease 0.4s forwards; }
+    .hero-title em { color: var(--gold-lt); font-style: italic; }
+    .hero-sub { font-size: 1rem; font-weight: 200; color: var(--muted); line-height: 1.8; max-width: 48ch; margin-top: 1.5rem; opacity: 0; animation: fadeUp 0.9s ease 0.6s forwards; }
+    .hero-cta { display: inline-block; margin-top: 2.5rem; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 400; color: var(--navy); background: var(--gold); padding: 1rem 2.2rem; text-decoration: none; transition: all 0.3s ease; opacity: 0; animation: fadeUp 0.9s ease 0.8s forwards; }
+    .hero-cta:hover { background: var(--gold-lt); transform: translateY(-2px); }
+    .scroll-hint { position: absolute; bottom: 3rem; right: 7rem; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; opacity: 0; animation: fadeIn 1s ease 1.2s forwards; }
+    .scroll-hint span { font-size: 0.58rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--muted); writing-mode: vertical-rl; }
+    .scroll-line { width: 1px; height: 50px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scrollDrop 2s ease infinite; }
+
+    /* Story */
+    #story { padding: 8rem 7rem; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+    .story-img { position: relative; }
+    .story-img img { width: 100%; height: 560px; object-fit: cover; }
+    .story-img::before { content: ''; position: absolute; top: -1.5rem; left: -1.5rem; right: 1.5rem; bottom: 1.5rem; border: 1px solid rgba(201,169,110,0.2); z-index: -1; }
+    .story-text .section-label { font-size: 0.6rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 1rem; }
+    .story-text .section-label::before { content: ''; width: 2rem; height: 1px; background: var(--gold); }
+    .story-text h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 3.5vw, 3.2rem); font-weight: 300; line-height: 1.15; color: var(--cream); margin-bottom: 1.5rem; }
+    .story-text h2 em { font-style: italic; color: var(--gold-lt); }
+    .story-text p { font-size: 0.9rem; font-weight: 200; line-height: 2; color: var(--muted); margin-bottom: 1.2rem; }
+    .price-badge { display: inline-flex; align-items: center; gap: 1rem; margin-top: 1rem; padding: 1rem 1.5rem; border: 1px solid rgba(201,169,110,0.3); background: rgba(201,169,110,0.05); }
+    .price-badge .amount { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--gold); line-height: 1; }
+    .price-badge .desc { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+
+    /* Lessons */
+    #lessons { padding: 7rem 7rem; background: var(--navy-mid); }
+    .lessons-header { text-align: center; margin-bottom: 4rem; }
+    .lessons-header .section-label { font-size: 0.6rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 1rem; }
+    .lessons-header h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; color: var(--cream); }
+    .lessons-header h2 em { font-style: italic; color: var(--gold-lt); }
+    .lessons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+    .lesson-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(201,169,110,0.1); padding: 2.5rem 2rem; position: relative; overflow: hidden; transition: border-color 0.3s, background 0.3s; }
+    .lesson-card:hover { background: rgba(201,169,110,0.04); border-color: rgba(201,169,110,0.3); }
+    .lesson-num { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; color: rgba(201,169,110,0.12); line-height: 1; margin-bottom: 1.5rem; }
+    .lesson-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; color: var(--cream); margin-bottom: 0.8rem; line-height: 1.2; }
+    .lesson-badge { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; display: inline-block; }
+    .lesson-needs { list-style: none; margin-top: 1rem; }
+    .lesson-needs li { font-size: 0.78rem; font-weight: 200; color: var(--muted); line-height: 1.8; padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .lesson-needs li:last-child { border-bottom: none; }
+    .lesson-needs li::before { content: '—'; color: var(--gold); margin-right: 0.5rem; font-size: 0.7rem; }
+
+    /* Testimonial */
+    #testimonial { padding: 7rem 7rem; text-align: center; position: relative; }
+    #testimonial::before { content: ''; position: absolute; inset: 4rem; border: 1px solid rgba(201,169,110,0.08); pointer-events: none; }
+    .testimonial-quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 300; font-style: italic; line-height: 1.6; color: var(--cream); max-width: 60ch; margin: 0 auto 2rem; }
+    .testimonial-mark { font-family: 'Cormorant Garamond', serif; font-size: 6rem; color: rgba(201,169,110,0.15); line-height: 0.5; display: block; margin-bottom: 1rem; }
+    .testimonial-author { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); }
+    .testimonial-tagline { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; color: rgba(201,169,110,0.5); margin-top: 0.5rem; }
+
+    /* CTA */
+    #cta { padding: 7rem 7rem; background: var(--navy-mid); display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+    .cta-text .section-label { font-size: 0.6rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 1rem; }
+    .cta-text .section-label::before { content: ''; width: 2rem; height: 1px; background: var(--gold); }
+    .cta-text h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; line-height: 1.15; color: var(--cream); margin-bottom: 1.2rem; }
+    .cta-text h2 em { font-style: italic; color: var(--gold-lt); }
+    .cta-text p { font-size: 0.9rem; font-weight: 200; line-height: 2; color: var(--muted); margin-bottom: 2rem; }
+    .btn-gold { display: inline-block; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 400; color: var(--navy); background: var(--gold); padding: 1rem 2.2rem; text-decoration: none; transition: all 0.3s ease; }
+    .btn-gold:hover { background: var(--gold-lt); transform: translateY(-2px); }
+    .btn-outline { display: inline-block; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 300; color: var(--cream); border: 1px solid rgba(245,240,232,0.3); padding: 1rem 2.2rem; text-decoration: none; transition: all 0.3s ease; margin-left: 1rem; }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .cta-img img { width: 100%; height: 480px; object-fit: cover; }
+
+    /* Footer */
+    footer { padding: 3rem 7rem; border-top: 1px solid rgba(201,169,110,0.12); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; }
+    .footer-logo span { color: var(--gold); font-style: italic; }
+    .footer-copy { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); }
+    .footer-social { display: flex; gap: 2rem; }
+    .footer-social a { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+    .footer-social a:hover { color: var(--gold); }
+
+    /* Animations */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scrollDrop { 0%,100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(0.5); opacity: 0.4; } }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    @media (max-width: 1100px) {
+      #story, #cta { grid-template-columns: 1fr; gap: 3rem; }
+      .lessons-grid { grid-template-columns: 1fr 1fr; }
+      nav { padding: 1.4rem 2.5rem; }
+      #hero .hero-content, #story, #lessons, #testimonial, #cta, footer { padding-left: 2.5rem; padding-right: 2.5rem; }
+    }
+    @media (max-width: 700px) {
+      .lessons-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body class="custom-cursor">
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">Chef <span>Desh</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#worlds">Worlds</a>
+      <a href="index.html#about">About</a>
+      <a href="photography.html">Photography</a>
+      <a href="sourdough.html" class="active">Workshop</a>
+      <a href="https://wildkitchen.show" target="_blank" rel="noopener">Wild Kitchen</a>
+      <a href="index.html#contact" class="nav-cta">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg">
+      <img src="https://static.wixstatic.com/media/7edcb1_85eb6cafa8c94fee8ffb10844d76838d~mv2.jpg/v1/fill/w_1800,h_900,al_c,q_85,enc_avif,quality_auto/7edcb1_85eb6cafa8c94fee8ffb10844d76838d~mv2.jpg" alt="Sourdough bread" />
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Toronto Sourdough Workshop</div>
+      <h1 class="hero-title">Bread Making<br>for Your <em>Soul</em></h1>
+      <p class="hero-sub">A four-part online and interactive course where curious beginner bakers discover the ancient art of sourdough — guided by Chef Desh from your own kitchen.</p>
+      <a href="https://deepcovewinery.ca/upcoming-events/" target="_blank" rel="noopener" class="hero-cta">Book Your Spot</a>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- OUR STORY -->
+  <section id="story">
+    <div class="story-img reveal">
+      <img src="https://static.wixstatic.com/media/7edcb1_606f605ead7b4e37833e7034d0e3a7d3f000.jpg/v1/fill/w_800,h_1400,al_c,q_85,enc_avif,quality_auto/7edcb1_606f605ead7b4e37833e7034d0e3a7d3f000.jpg" alt="Sourdough workshop" />
+    </div>
+    <div class="story-text">
+      <div class="section-label reveal">Our Story</div>
+      <h2 class="reveal reveal-delay-1">It Started With<br>One <em>Perfect Loaf</em></h2>
+      <p class="reveal reveal-delay-2">It all began in a Toronto condo kitchen. The taste, the smell, the texture — Desh was hooked from the very first bake. Two weeks later, a simple idea from a roommate changed everything: why not share this with the building?</p>
+      <p class="reveal reveal-delay-2">What started as a small community gathering has grown into the Toronto Sourdough Workshop — a four-part, online and interactive course where beginner bakers express themselves through the magic of sourdough. Every session is live, every question answered, every loaf earned.</p>
+      <div class="price-badge reveal reveal-delay-3">
+        <div class="amount">$25</div>
+        <div class="desc">Per class<br>Online &amp; Interactive</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSONS -->
+  <section id="lessons">
+    <div class="lessons-header">
+      <div class="section-label reveal">The Four-Part Course</div>
+      <h2 class="reveal reveal-delay-1">What You'll <em>Learn</em></h2>
+    </div>
+    <div class="lessons-grid">
+
+      <div class="lesson-card reveal">
+        <div class="lesson-num">01</div>
+        <div class="lesson-badge">Monday · 6:30 PM</div>
+        <h3 class="lesson-title">Wild Yeast</h3>
+        <ul class="lesson-needs">
+          <li>A jar (~400ml, no plastic)</li>
+          <li>Metal fork</li>
+          <li>100g unbleached flour</li>
+          <li>100g whole wheat flour</li>
+          <li>200g water</li>
+          <li>Elastic band</li>
+          <li>Measuring cup</li>
+          <li>Weighing scale (optional)</li>
+        </ul>
+      </div>
+
+      <div class="lesson-card reveal reveal-delay-1">
+        <div class="lesson-num">02</div>
+        <div class="lesson-badge">Tuesday · 4:00 PM</div>
+        <h3 class="lesson-title">Ingredients &amp; Bulk Fermentation</h3>
+        <ul class="lesson-needs">
+          <li>2 feet of counter space</li>
+          <li>100g wild yeast/starter</li>
+          <li>350g water</li>
+          <li>400g bread flour</li>
+          <li>6g salt</li>
+          <li>Weighing scale</li>
+          <li>2 tea towels</li>
+          <li>Bowl scraper or butter knife</li>
+          <li>A glass of your favourite wine</li>
+        </ul>
+      </div>
+
+      <div class="lesson-card reveal reveal-delay-2">
+        <div class="lesson-num">03</div>
+        <div class="lesson-badge">Tuesday · 8:30 PM</div>
+        <h3 class="lesson-title">Shaping Your Loaf</h3>
+        <ul class="lesson-needs">
+          <li>Your bulk-fermented dough</li>
+          <li>Bench scraper</li>
+          <li>Banneton or lined bowl</li>
+          <li>Lightly floured surface</li>
+          <li>Tea towel or plastic wrap</li>
+          <li>Patience &amp; confidence</li>
+        </ul>
+      </div>
+
+      <div class="lesson-card reveal reveal-delay-3">
+        <div class="lesson-num">04</div>
+        <div class="lesson-badge">Wednesday · TBD</div>
+        <h3 class="lesson-title">Scoring &amp; The Bake</h3>
+        <ul class="lesson-needs">
+          <li>Shaped &amp; chilled dough</li>
+          <li>Dutch oven or covered pot</li>
+          <li>Lame or sharp razor blade</li>
+          <li>Oven mitts</li>
+          <li>Parchment paper</li>
+          <li>Cooling rack</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section id="testimonial">
+    <span class="testimonial-mark reveal">"</span>
+    <p class="testimonial-quote reveal reveal-delay-1">Desh Fernando is a phenomenal teacher and makes learning an ancient art fun and educational while helping build confidence in the process. $25 is really a bargain for all that you get in his zoom online class. He's right there with you in your kitchen!</p>
+    <div class="testimonial-author reveal reveal-delay-2">— Doris Fin · Workshop Student</div>
+    <div class="testimonial-tagline reveal reveal-delay-3">Have no fear! You can achieve the sourdough ear.</div>
+  </section>
+
+  <!-- BOOK -->
+  <section id="cta">
+    <div class="cta-text">
+      <div class="section-label reveal">Ready to Bake?</div>
+      <h2 class="reveal reveal-delay-1">Let's Get You<br><em>Into the Kitchen</em></h2>
+      <p class="reveal reveal-delay-2">Classes are live, online, and interactive. Desh is right there with you — from feeding your starter to pulling your first perfect loaf from the oven. All you need is a wifi connection and the will to bake.</p>
+      <div class="reveal reveal-delay-3">
+        <a href="https://deepcovewinery.ca/upcoming-events/" target="_blank" rel="noopener" class="btn-gold">Book Your Spot</a>
+        <a href="index.html#contact" class="btn-outline">Get in Touch</a>
+      </div>
+    </div>
+    <div class="cta-img reveal reveal-delay-2">
+      <img src="https://static.wixstatic.com/media/7edcb1_606f605ead7b4e37833e7034d0e3a7d3f000.jpg/v1/fill/w_800,h_1400,al_c,q_85,enc_avif,quality_auto/7edcb1_606f605ead7b4e37833e7034d0e3a7d3f000.jpg" alt="Fresh sourdough loaf" />
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Chef <span>Desh</span></div>
+    <div class="footer-copy">© 2026 Desh Fernando. All rights reserved.</div>
+    <div class="footer-social">
+      <a href="https://deshfernando.com" target="_blank">Portfolio</a>
+      <a href="https://torontosourdoughworkshop.com" target="_blank">Workshop</a>
+      <a href="https://chefdesh.ca" target="_blank">Chef Desh</a>
+      <a href="https://wildkitchen.show" target="_blank">Wild Kitchen</a>
+      <a href="https://www.instagram.com/chef_desh_wildkitchenshow/" target="_blank">Instagram</a>
+    </div>
+  </footer>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+      ring.style.left   = e.clientX + 'px';
+      ring.style.top    = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => { ring.style.width = '52px'; ring.style.height = '52px'; ring.style.opacity = '0.9'; });
+      el.addEventListener('mouseleave', () => { ring.style.width = '32px'; ring.style.height = '32px'; ring.style.opacity = '0.5'; });
+    });
+
+    // Nav scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 60); });
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => io.observe(el));
+  </script>
+</body>
+</html>

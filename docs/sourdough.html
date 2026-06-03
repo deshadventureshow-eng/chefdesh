@@ -84,15 +84,24 @@
     .lessons-header h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; color: var(--cream); }
     .lessons-header h2 em { font-style: italic; color: var(--gold-lt); }
     .lessons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
-    .lesson-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(201,169,110,0.1); padding: 2.5rem 2rem; position: relative; overflow: hidden; transition: border-color 0.3s, background 0.3s; }
+    .lesson-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(201,169,110,0.1); position: relative; overflow: hidden; transition: border-color 0.3s, background 0.3s; display: flex; flex-direction: column; }
     .lesson-card:hover { background: rgba(201,169,110,0.04); border-color: rgba(201,169,110,0.3); }
-    .lesson-num { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; color: rgba(201,169,110,0.12); line-height: 1; margin-bottom: 1.5rem; }
+    .lesson-card-img { width: 100%; height: 220px; object-fit: cover; object-position: center; display: block; }
+    .lesson-card-body { padding: 2rem 2rem 2.5rem; }
+    .lesson-num { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; color: rgba(201,169,110,0.12); line-height: 1; margin-bottom: 1rem; }
     .lesson-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; color: var(--cream); margin-bottom: 0.8rem; line-height: 1.2; }
     .lesson-badge { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; display: inline-block; }
     .lesson-needs { list-style: none; margin-top: 1rem; }
     .lesson-needs li { font-size: 0.78rem; font-weight: 200; color: var(--muted); line-height: 1.8; padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
     .lesson-needs li:last-child { border-bottom: none; }
     .lesson-needs li::before { content: '—'; color: var(--gold); margin-right: 0.5rem; font-size: 0.7rem; }
+
+    /* Gallery strip */
+    #gallery { padding: 0; overflow: hidden; }
+    .gallery-strip { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.2fr; height: 420px; }
+    .gallery-strip-item { overflow: hidden; position: relative; }
+    .gallery-strip-item img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 0.7s ease; }
+    .gallery-strip-item:hover img { transform: scale(1.05); }
 
     /* Testimonial */
     #testimonial { padding: 7rem 7rem; text-align: center; position: relative; }
@@ -210,6 +219,8 @@
     <div class="lessons-grid">
 
       <div class="lesson-card reveal">
+        <img class="lesson-card-img" src="sd-img1.jpg" alt="Wild yeast starter" />
+        <div class="lesson-card-body">
         <div class="lesson-num">01</div>
         <div class="lesson-badge">Monday · 6:30 PM</div>
         <h3 class="lesson-title">Wild Yeast</h3>
@@ -223,9 +234,12 @@
           <li>Measuring cup</li>
           <li>Weighing scale (optional)</li>
         </ul>
+        </div>
       </div>
 
       <div class="lesson-card reveal reveal-delay-1">
+        <img class="lesson-card-img" src="sd-story.jpg" alt="Bulk fermentation" style="object-position: top;" />
+        <div class="lesson-card-body">
         <div class="lesson-num">02</div>
         <div class="lesson-badge">Tuesday · 4:00 PM</div>
         <h3 class="lesson-title">Ingredients &amp; Bulk Fermentation</h3>
@@ -240,9 +254,12 @@
           <li>Bowl scraper or butter knife</li>
           <li>A glass of your favourite wine</li>
         </ul>
+        </div>
       </div>
 
       <div class="lesson-card reveal reveal-delay-2">
+        <img class="lesson-card-img" src="sd-img5.jpg" alt="Shaping dough" />
+        <div class="lesson-card-body">
         <div class="lesson-num">03</div>
         <div class="lesson-badge">Tuesday · 8:30 PM</div>
         <h3 class="lesson-title">Shaping Your Loaf</h3>
@@ -254,9 +271,12 @@
           <li>Tea towel or plastic wrap</li>
           <li>Patience &amp; confidence</li>
         </ul>
+        </div>
       </div>
 
       <div class="lesson-card reveal reveal-delay-3">
+        <img class="lesson-card-img" src="sd-img4.jpg" alt="Fresh baked loaves" />
+        <div class="lesson-card-body">
         <div class="lesson-num">04</div>
         <div class="lesson-badge">Wednesday · TBD</div>
         <h3 class="lesson-title">Scoring &amp; The Bake</h3>
@@ -268,8 +288,19 @@
           <li>Parchment paper</li>
           <li>Cooling rack</li>
         </ul>
+        </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- GALLERY STRIP -->
+  <section id="gallery">
+    <div class="gallery-strip">
+      <div class="gallery-strip-item"><img src="sd-img6.jpg" alt="Workshop students" /></div>
+      <div class="gallery-strip-item"><img src="sd-img7.jpg" alt="Workshop celebration" /></div>
+      <div class="gallery-strip-item"><img src="sd-img3.jpg" alt="Scored sourdough" /></div>
+      <div class="gallery-strip-item"><img src="sd-img4.jpg" alt="Fresh loaves" /></div>
     </div>
   </section>
 

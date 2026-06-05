@@ -115,24 +115,24 @@
     .about-img-accent { position: absolute; bottom: -1.5rem; right: -1.5rem; width: 60%; aspect-ratio: 1; border: 1px solid var(--burgundy); z-index: -1; }
     .about-img-label { position: absolute; bottom: 1.5rem; left: -1.5rem; background: var(--burgundy); color: var(--cream); padding: 1rem 1.4rem; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; }
 
-    /* ── Photography ── */
-    #photography { padding: 8rem 0; background: var(--navy-mid); }
-    .photo-header { padding: 0 7rem; margin-bottom: 4rem; display: flex; align-items: flex-end; justify-content: space-between; }
-    .photo-link { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 0.6rem; transition: gap 0.3s; }
-    .photo-link:hover { gap: 1rem; }
-    .photo-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 320px 260px; gap: 3px; }
-    .photo-item { overflow: hidden; position: relative; }
-    .photo-item:first-child { grid-row: 1 / 3; }
-    /* 5 items — no last-child spanning needed */
-    .photo-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
-    .photo-item:hover img { transform: scale(1.06); }
-    .photo-item-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,0.75), transparent); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream-dk); }
-    /* Placeholder backgrounds for items without direct image access */
-    .photo-bg-1 { background: linear-gradient(135deg, #1a3a25, #2d1520); }
-    .photo-bg-2 { background: linear-gradient(135deg, #2a1535, #1a1035); }
-    .photo-bg-3 { background: linear-gradient(135deg, #351525, #1a0d10); }
-    .photo-bg-4 { background: linear-gradient(135deg, #0d2535, #0a1a25); }
-    .photo-bg-5 { background: linear-gradient(135deg, #1a2510, #0d1a0a); }
+    /* ── Photography Chooser ── */
+    #photography { background: var(--navy-mid); }
+    .chooser-grid { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 520px; }
+    .chooser-card { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem 2rem; min-height: 520px; text-decoration: none; cursor: pointer; border: none; background: transparent; text-align: left; font-family: inherit; color: inherit; }
+    .chooser-img { position: absolute; inset: 0; }
+    .chooser-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 0.7s ease; }
+    .chooser-card:hover .chooser-img img { transform: scale(1.07); }
+    .chooser-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%); transition: background 0.4s; }
+    .chooser-card:hover .chooser-overlay { background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.15) 100%); }
+    .chooser-divider { position: absolute; top: 0; right: 0; bottom: 0; width: 1px; background: rgba(201,169,110,0.2); }
+    .chooser-content { position: relative; z-index: 2; }
+    .chooser-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: rgba(201,169,110,0.2); line-height: 1; margin-bottom: 0.8rem; }
+    .chooser-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: var(--cream); margin-bottom: 0.5rem; line-height: 1.2; }
+    .chooser-sub { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem; }
+    .chooser-arrow { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-top: 1rem; transform: translateX(-10px); transition: transform 0.3s, opacity 0.3s; opacity: 0; }
+    .chooser-card:hover .chooser-arrow { transform: translateX(0); opacity: 1; }
+    @media (max-width: 1100px) { .chooser-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 700px) { .chooser-grid { grid-template-columns: 1fr; } .chooser-card { min-height: 340px; } }
 
     /* ── Sourdough ── */
     #sourdough { padding: 8rem 7rem; background: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 7rem; align-items: center; }
@@ -241,7 +241,6 @@
       .hero-scroll { left: 3rem; }
       #about, #sourdough, #contact { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 3rem; }
       .about-visual { order: -1; }
-      .photo-header { padding: 0 3rem; }
       .worlds-grid { grid-template-columns: 1fr 1fr; }
       #wildkitchen { padding: 7rem 2rem; }
       #testimonial { padding: 5rem 2rem; }
@@ -390,36 +389,57 @@
     </div>
   </section>
 
-  <!-- PHOTOGRAPHY -->
+  <!-- PHOTOGRAPHY CHOOSER -->
   <section id="photography">
-    <div class="photo-header">
-      <div>
-        <div class="section-label reveal">Through the Lens</div>
-        <h2 class="section-title reveal reveal-delay-1">Food. <em>Life.</em> Motion.</h2>
-      </div>
-      <a href="photography.html" class="photo-link reveal">View Full Portfolio →</a>
-    </div>
-    <div class="photo-grid">
-      <div class="photo-item">
-        <img src="food-7.jpg" alt="Food Photography" />
-        <div class="photo-item-label">Food</div>
-      </div>
-      <div class="photo-item">
-        <img src="portraits-3.jpg" alt="Portraits" />
-        <div class="photo-item-label">Portraits</div>
-      </div>
-      <div class="photo-item">
-        <img src="lifestyle-18.jpg" alt="Lifestyle" />
-        <div class="photo-item-label">Lifestyle</div>
-      </div>
-      <div class="photo-item">
-        <img src="personal-22.jpg" alt="Personal" />
-        <div class="photo-item-label">Personal</div>
-      </div>
-      <div class="photo-item">
-        <img src="lifestyle-9.jpg" alt="Motion" />
-        <div class="photo-item-label">Motion</div>
-      </div>
+    <div class="chooser-grid">
+
+      <a href="photography.html" class="chooser-card">
+        <div class="chooser-img"><img src="food.jpg" alt="Food Photography" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-divider"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">01</div>
+          <div class="chooser-sub">Plated · Rustic · Wild</div>
+          <h3 class="chooser-title">Food</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </a>
+
+      <a href="photography.html" class="chooser-card">
+        <div class="chooser-img"><img src="portraits.jpg" alt="Portrait Photography" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-divider"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">02</div>
+          <div class="chooser-sub">People · Character · Light</div>
+          <h3 class="chooser-title">Portraits</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </a>
+
+      <a href="photography.html" class="chooser-card">
+        <div class="chooser-img"><img src="lifestyle.jpg" alt="Lifestyle Photography" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-divider"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">03</div>
+          <div class="chooser-sub">Moments · Movement · Mood</div>
+          <h3 class="chooser-title">Lifestyle</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </a>
+
+      <a href="photography.html" class="chooser-card">
+        <div class="chooser-img"><img src="personal.jpg" alt="Personal Photography" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">04</div>
+          <div class="chooser-sub">Adventure · Wild · Home</div>
+          <h3 class="chooser-title">Personal</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </a>
+
     </div>
   </section>
 

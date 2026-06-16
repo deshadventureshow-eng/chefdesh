@@ -80,7 +80,7 @@
     .section-title em { font-style: italic; color: var(--gold-lt); }
     .worlds-header p { font-size: 0.9rem; font-weight: 200; line-height: 1.9; color: var(--muted); max-width: 55ch; margin: 1.5rem auto 0; }
 
-    .worlds-grid { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 560px; }
+    .worlds-grid { display: grid; grid-template-columns: repeat(3, 1fr); min-height: 560px; }
     .world-card { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem 2rem; min-height: 560px; text-decoration: none; cursor: none; }
     .world-card-img { position: absolute; inset: 0; }
     .world-card-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 0.7s ease; }
@@ -110,28 +110,29 @@
     .stat-label { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: #8a7a70; margin-top: 0.4rem; }
     .about-visual { position: relative; }
     .about-img-main { aspect-ratio: 3/4; overflow: hidden; position: relative; }
-    .about-img-main img { width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: transform 0.6s ease; }
+    .about-img-main img { width: 100%; height: 100%; object-fit: cover; object-position: center 65%; transition: transform 0.6s ease; }
     .about-img-main:hover img { transform: scale(1.04); }
     .about-img-accent { position: absolute; bottom: -1.5rem; right: -1.5rem; width: 60%; aspect-ratio: 1; border: 1px solid var(--burgundy); z-index: -1; }
     .about-img-label { position: absolute; bottom: 1.5rem; left: -1.5rem; background: var(--burgundy); color: var(--cream); padding: 1rem 1.4rem; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; }
 
-    /* ── Photography ── */
-    #photography { padding: 8rem 0; background: var(--navy-mid); }
-    .photo-header { padding: 0 7rem; margin-bottom: 4rem; display: flex; align-items: flex-end; justify-content: space-between; }
-    .photo-link { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 0.6rem; transition: gap 0.3s; }
-    .photo-link:hover { gap: 1rem; }
-    .photo-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 320px 260px; gap: 3px; }
-    .photo-item { overflow: hidden; position: relative; }
-    .photo-item:first-child { grid-row: 1 / 3; }
-    .photo-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
-    .photo-item:hover img { transform: scale(1.06); }
-    .photo-item-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,0.75), transparent); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream-dk); }
-    /* Placeholder backgrounds for items without direct image access */
-    .photo-bg-1 { background: linear-gradient(135deg, #1a3a25, #2d1520); }
-    .photo-bg-2 { background: linear-gradient(135deg, #2a1535, #1a1035); }
-    .photo-bg-3 { background: linear-gradient(135deg, #351525, #1a0d10); }
-    .photo-bg-4 { background: linear-gradient(135deg, #0d2535, #0a1a25); }
-    .photo-bg-5 { background: linear-gradient(135deg, #1a2510, #0d1a0a); }
+    /* ── Photography Chooser ── */
+    #photography { background: var(--navy-mid); }
+    .chooser-grid { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 520px; }
+    .chooser-card { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem 2rem; min-height: 520px; text-decoration: none; cursor: pointer; border: none; background: transparent; text-align: left; font-family: inherit; color: inherit; }
+    .chooser-img { position: absolute; inset: 0; }
+    .chooser-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 0.7s ease; }
+    .chooser-card:hover .chooser-img img { transform: scale(1.07); }
+    .chooser-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%); transition: background 0.4s; }
+    .chooser-card:hover .chooser-overlay { background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.15) 100%); }
+    .chooser-divider { position: absolute; top: 0; right: 0; bottom: 0; width: 1px; background: rgba(201,169,110,0.2); }
+    .chooser-content { position: relative; z-index: 2; }
+    .chooser-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: rgba(201,169,110,0.2); line-height: 1; margin-bottom: 0.8rem; }
+    .chooser-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: var(--cream); margin-bottom: 0.5rem; line-height: 1.2; }
+    .chooser-sub { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem; }
+    .chooser-arrow { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-top: 1rem; transform: translateX(-10px); transition: transform 0.3s, opacity 0.3s; opacity: 0; }
+    .chooser-card:hover .chooser-arrow { transform: translateX(0); opacity: 1; }
+    @media (max-width: 1100px) { .chooser-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 700px) { .chooser-grid { grid-template-columns: 1fr; } .chooser-card { min-height: 340px; } }
 
     /* ── Sourdough ── */
     #sourdough { padding: 8rem 7rem; background: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 7rem; align-items: center; }
@@ -240,7 +241,6 @@
       .hero-scroll { left: 3rem; }
       #about, #sourdough, #contact { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 3rem; }
       .about-visual { order: -1; }
-      .photo-header { padding: 0 3rem; }
       .worlds-grid { grid-template-columns: 1fr 1fr; }
       #wildkitchen { padding: 7rem 2rem; }
       #testimonial { padding: 5rem 2rem; }
@@ -250,6 +250,7 @@
       .worlds-grid { grid-template-columns: 1fr; }
       .photo-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
       .photo-item:first-child { grid-row: auto; }
+      .photo-item:last-child { grid-column: auto; }
       .form-row { grid-template-columns: 1fr; }
       .about-stats { grid-template-columns: 1fr; gap: 1.2rem; }
       .nav-links { display: none; }
@@ -271,8 +272,8 @@
       <a href="#worlds">Worlds</a>
       <a href="#about">About</a>
       <a href="#photography">Photography</a>
-      <a href="#sourdough">Workshop</a>
-      <a href="#wildkitchen">Wild Kitchen</a>
+      <a href="https://deepcovewinery.ca/upcoming-events/" target="_blank" rel="noopener">Workshop</a>
+      <a href="https://wildkitchen.show" target="_blank" rel="noopener">Wild Kitchen</a>
       <a href="#contact" class="nav-cta">Contact</a>
     </div>
   </nav>
@@ -288,7 +289,7 @@
       <h1 class="hero-title">Born to Explore,</h1>
       <h1 class="hero-title-italic">Inspired by Adventure,</h1>
       <h1 class="hero-title-pearl">Cooked to Perfection.</h1>
-      <p class="hero-desc">Desh Fernando is a Vancouver Island-based chef, sourdough educator, food & lifestyle photographer, and adventure cooking creator — blending culinary artistry with storytelling across every medium.</p>
+      <p class="hero-desc">Host of Wild Kitchen and Vancouver Island-based chef, culinary educator, and food &amp; lifestyle photographer — blending culinary artistry with storytelling across multiple mediums.</p>
       <div class="hero-buttons">
         <a href="#worlds" class="btn-gold">Explore My World</a>
         <a href="#contact" class="btn-outline">Work With Me</a>
@@ -305,7 +306,7 @@
   <section id="worlds">
     <div class="worlds-header reveal">
       <div class="section-label">Everything I Do</div>
-      <h2 class="section-title">Four Worlds, <em>One Vision</em></h2>
+      <h2 class="section-title">Three Worlds, <em>One Vision</em></h2>
       <p>From the kitchen to the lens to the studio — every venture is driven by one belief: food is the greatest adventure life has to offer.</p>
     </div>
     <div class="worlds-grid">
@@ -313,7 +314,7 @@
       <!-- Card 1: Photography — sourdough loaf image as backdrop -->
       <a href="photography.html" class="world-card">
         <div class="world-card-img">
-          <img src="https://static.wixstatic.com/media/7edcb1_21dea03f23bc4be49a80289b382f48cf~mv2.jpg/v1/fill/w_800,h_1200,al_c,q_85,enc_avif,quality_auto/7edcb1_21dea03f23bc4be49a80289b382f48cf~mv2.jpg" alt="Photography" />
+          <img src="photography-card.jpg" alt="Photography" />
         </div>
         <div class="world-card-overlay"></div>
         <div class="world-card-divider"></div>
@@ -344,31 +345,14 @@
         </div>
       </a>
 
-      <!-- Card 3: Chef Desh Adventure -->
-      <a href="https://chefdesh.ca" target="_blank" class="world-card">
-        <div class="world-card-img">
-          <img src="https://static.wixstatic.com/media/7edcb1_930b7fdb0420444ebe2714976825d712~mv2.jpg/v1/fill/w_800,h_1200,al_c,q_85,enc_avif,quality_auto/7edcb1_930b7fdb0420444ebe2714976825d712~mv2.jpg" alt="Chef Desh Adventure" />
-        </div>
-        <div class="world-card-overlay"></div>
-        <div class="world-card-divider"></div>
-        <div class="world-card-content">
-          <div class="world-card-num">03</div>
-          <span class="world-card-icon">🌍</span>
-          <h3 class="world-card-title">Chef Desh Adventure Cooking</h3>
-          <div class="world-card-sub">Portfolio · Journey · Story</div>
-          <p class="world-card-desc">The story of a chef's evolution — from how the adventure began, to where it continues to take him around the world.</p>
-          <span class="world-card-arrow">See the Journey →</span>
-        </div>
-      </a>
-
-      <!-- Card 4: Wild Kitchen Show -->
+      <!-- Card 3: Wild Kitchen Show -->
       <a href="https://wildkitchen.show" target="_blank" class="world-card">
         <div class="world-card-img">
-          <img src="https://static.wixstatic.com/media/7edcb1_85eb6cafa8c94fee8ffb10844d76838d~mv2.jpg/v1/fill/w_800,h_1200,al_c,q_85,enc_avif,quality_auto/7edcb1_85eb6cafa8c94fee8ffb10844d76838d~mv2.jpg" alt="Wild Kitchen Show" />
+          <img src="wildkitchen-card.jpg" alt="Wild Kitchen Show" style="object-position: 85% center;" />
         </div>
         <div class="world-card-overlay"></div>
         <div class="world-card-content">
-          <div class="world-card-num">04</div>
+          <div class="world-card-num">03</div>
           <span class="world-card-icon">🎬</span>
           <h3 class="world-card-title">Wild Kitchen Show</h3>
           <div class="world-card-sub">Instagram · TikTok · Facebook</div>
@@ -386,11 +370,11 @@
       <div class="section-label reveal">The Man Behind the Apron</div>
       <h2 class="section-title reveal reveal-delay-1">A Chef Who <em>Lives</em><br>to Tell the Story</h2>
       <div class="reveal reveal-delay-2">
-        <p style="margin-top:1.8rem">Desh Fernando is a Vancouver Island-based chef, photographer, and storyteller whose passion for food goes far beyond the plate. Inspired by adventure and driven by curiosity, Desh has built a culinary world that spans teaching sourdough in condos, capturing breathtaking food photography, and hosting a wild adventure cooking show.</p>
+        <p style="margin-top:1.8rem">Host of Wild Kitchen and Vancouver Island-based chef, culinary educator, and food &amp; lifestyle photographer — blending culinary artistry with storytelling across multiple mediums.</p>
         <p>What started with a single sourdough loaf has grown into a multi-faceted creative career — one that connects people with the joy of cooking, the beauty of food, and the thrill of exploration.</p>
       </div>
       <div class="about-stats reveal reveal-delay-3">
-        <div><div class="stat-num">4</div><div class="stat-label">Creative Platforms</div></div>
+        <div><div class="stat-num">3</div><div class="stat-label">Creative Platforms</div></div>
         <div><div class="stat-num">TSW</div><div class="stat-label">Since 2020</div></div>
         <div><div class="stat-num">YYJ</div><div class="stat-label">Vancouver Island</div></div>
       </div>
@@ -398,44 +382,88 @@
     <div class="about-visual reveal">
       <!-- Real portrait from chefdesh.ca -->
       <div class="about-img-main">
-        <img src="https://static.wixstatic.com/media/7edcb1_7c55d6366b7a4d75a29b11c06c20d129~mv2.jpeg/v1/fill/w_900,h_1200,al_c,q_85,enc_avif,quality_auto/7edcb1_7c55d6366b7a4d75a29b11c06c20d129~mv2.jpeg" alt="Chef Desh Fernando" />
+        <img src="_MG_3203-3.jpg" alt="Chef Desh Fernando" />
       </div>
       <div class="about-img-accent"></div>
       <div class="about-img-label">Chef Desh · North Saanich, BC</div>
     </div>
   </section>
 
-  <!-- PHOTOGRAPHY -->
-  <section id="photography">
-    <div class="photo-header">
-      <div>
-        <div class="section-label reveal">Through the Lens</div>
-        <h2 class="section-title reveal reveal-delay-1">Food. <em>Life.</em> Motion.</h2>
-      </div>
-      <a href="photography.html" class="photo-link reveal">View Full Portfolio →</a>
+  <!-- WILD KITCHEN SHOW -->
+  <section id="wildkitchen">
+    <div class="wk-bg">
+      <img src="https://static.wixstatic.com/media/7edcb1_85eb6cafa8c94fee8ffb10844d76838d~mv2.jpg/v1/fill/w_1800,h_900,al_c,q_85,enc_avif,quality_auto/7edcb1_85eb6cafa8c94fee8ffb10844d76838d~mv2.jpg" alt="Wild Kitchen" />
     </div>
-    <div class="photo-grid">
-      <!-- Bread / food as stand-in for food photography -->
-      <div class="photo-item">
-        <img src="https://static.wixstatic.com/media/7edcb1_87597bde7d1643f1b5c010f6da47545e~mv2.jpg/v1/fill/w_900,h_1400,al_c,q_85,enc_avif,quality_auto/7edcb1_87597bde7d1643f1b5c010f6da47545e~mv2.jpg" alt="Food Photography" />
-        <div class="photo-item-label">Food</div>
+    <div class="wk-bg-overlay"></div>
+    <div class="wk-inner">
+      <div class="wk-logo reveal">
+        <img src="https://images.squarespace-cdn.com/content/v1/66eca0ae4f2f0e2d39de089b/d139848c-08fc-4bb3-a819-1ab4d24eb121/WK_Logo_OT.png?format=1500w" alt="Wild Kitchen Show Logo" />
       </div>
-      <div class="photo-item">
-        <img src="https://static.wixstatic.com/media/7edcb1_c856598d08ef403d82a8cdd576524d91~mv2.jpg/v1/fill/w_600,h_700,al_c,q_85,enc_avif,quality_auto/7edcb1_c856598d08ef403d82a8cdd576524d91~mv2.jpg" alt="Portraits" />
-        <div class="photo-item-label">Portraits</div>
+      <div class="section-label reveal">The Show</div>
+      <h2 class="wk-title reveal reveal-delay-1">Wild<br><em>Kitchen</em></h2>
+      <p class="wk-desc reveal reveal-delay-2">Where culinary craft meets untamed adventure. The Wild Kitchen Show follows Chef Desh into the wild — cooking, exploring, and bringing food stories to life on screen.</p>
+      <div class="wk-platforms reveal reveal-delay-3">
+        <a href="https://www.instagram.com/Chef_Desh_Adventure_Cooking/" target="_blank" class="wk-platform"><span class="wk-platform-icon">📸</span>Instagram</a>
+        <a href="https://wildkitchen.show" target="_blank" class="wk-platform"><span class="wk-platform-icon">🎵</span>TikTok</a>
+        <a href="https://wildkitchen.show" target="_blank" class="wk-platform"><span class="wk-platform-icon">👥</span>Facebook</a>
+        <a href="https://wildkitchen.show" target="_blank" class="wk-platform"><span class="wk-platform-icon">🌐</span>wildkitchen.show</a>
       </div>
-      <div class="photo-item">
-        <img src="https://static.wixstatic.com/media/7edcb1_274edad824724936afb0e28985c32f5d~mv2.jpg/v1/fill/w_600,h_700,al_c,q_85,enc_avif,quality_auto/7edcb1_274edad824724936afb0e28985c32f5d~mv2.jpg" alt="Lifestyle" />
-        <div class="photo-item-label">Lifestyle</div>
-      </div>
-      <div class="photo-item">
-        <img src="https://static.wixstatic.com/media/7edcb1_db6fdc9367e64630b5d8ff2029697bf9~mv2.jpg/v1/fill/w_600,h_500,al_c,q_85,enc_avif,quality_auto/7edcb1_db6fdc9367e64630b5d8ff2029697bf9~mv2.jpg" alt="Motion" />
-        <div class="photo-item-label">Motion</div>
-      </div>
-      <div class="photo-item">
-        <img src="https://static.wixstatic.com/media/7edcb1_3feead9f6e024293879d1c390e422662~mv2.jpg/v1/fill/w_600,h_500,al_c,q_85,enc_avif,quality_auto/7edcb1_3feead9f6e024293879d1c390e422662~mv2.jpg" alt="Personal" />
-        <div class="photo-item-label">Personal</div>
-      </div>
+      <a href="https://wildkitchen.show" target="_blank" class="btn-gold reveal reveal-delay-4">Watch the Show</a>
+      <div class="wk-tagline reveal">Inspired by Adventure</div>
+    </div>
+  </section>
+
+  <!-- PHOTOGRAPHY CHOOSER -->
+  <section id="photography">
+    <div class="chooser-grid">
+
+      <a href="photography.html" class="chooser-card">
+        <div class="chooser-img"><img src="food.jpg" alt="Food Photography" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-divider"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">01</div>
+          <div class="chooser-sub">Plated · Rustic · Wild</div>
+          <h3 class="chooser-title">Food</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </a>
+
+      <a href="photography.html" class="chooser-card">
+        <div class="chooser-img"><img src="portraits.jpg" alt="Portrait Photography" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-divider"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">02</div>
+          <div class="chooser-sub">People · Character · Light</div>
+          <h3 class="chooser-title">Portraits</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </a>
+
+      <a href="photography.html" class="chooser-card">
+        <div class="chooser-img"><img src="lifestyle.jpg" alt="Lifestyle Photography" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-divider"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">03</div>
+          <div class="chooser-sub">Moments · Movement · Mood</div>
+          <h3 class="chooser-title">Lifestyle</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </a>
+
+      <a href="photography.html" class="chooser-card">
+        <div class="chooser-img"><img src="personal.jpg" alt="Personal Photography" /></div>
+        <div class="chooser-overlay"></div>
+        <div class="chooser-content">
+          <div class="chooser-num">04</div>
+          <div class="chooser-sub">Adventure · Wild · Home</div>
+          <h3 class="chooser-title">Personal</h3>
+          <span class="chooser-arrow">Enter Gallery →</span>
+        </div>
+      </a>
+
     </div>
   </section>
 
@@ -468,30 +496,6 @@
         <div class="feature-item"><div class="feature-icon">✦</div><div class="feature-text"><strong>Nutrition Blog</strong><br>Understanding the health benefits of fermented breads</div></div>
       </div>
       <a href="sourdough.html" class="btn-forest reveal reveal-delay-4">Book a Workshop</a>
-    </div>
-  </section>
-
-  <!-- WILD KITCHEN SHOW -->
-  <section id="wildkitchen">
-    <div class="wk-bg">
-      <img src="https://static.wixstatic.com/media/7edcb1_85eb6cafa8c94fee8ffb10844d76838d~mv2.jpg/v1/fill/w_1800,h_900,al_c,q_85,enc_avif,quality_auto/7edcb1_85eb6cafa8c94fee8ffb10844d76838d~mv2.jpg" alt="Wild Kitchen" />
-    </div>
-    <div class="wk-bg-overlay"></div>
-    <div class="wk-inner">
-      <div class="wk-logo reveal">
-        <img src="https://images.squarespace-cdn.com/content/v1/66eca0ae4f2f0e2d39de089b/d139848c-08fc-4bb3-a819-1ab4d24eb121/WK_Logo_OT.png?format=1500w" alt="Wild Kitchen Show Logo" />
-      </div>
-      <div class="section-label reveal">The Show</div>
-      <h2 class="wk-title reveal reveal-delay-1">Wild<br><em>Kitchen</em></h2>
-      <p class="wk-desc reveal reveal-delay-2">Where culinary craft meets untamed adventure. The Wild Kitchen Show follows Chef Desh into the wild — cooking, exploring, and bringing food stories to life on screen.</p>
-      <div class="wk-platforms reveal reveal-delay-3">
-        <a href="https://www.instagram.com/Chef_Desh_Adventure_Cooking/" target="_blank" class="wk-platform"><span class="wk-platform-icon">📸</span>Instagram</a>
-        <a href="https://wildkitchen.show" target="_blank" class="wk-platform"><span class="wk-platform-icon">🎵</span>TikTok</a>
-        <a href="https://wildkitchen.show" target="_blank" class="wk-platform"><span class="wk-platform-icon">👥</span>Facebook</a>
-        <a href="https://wildkitchen.show" target="_blank" class="wk-platform"><span class="wk-platform-icon">🌐</span>wildkitchen.show</a>
-      </div>
-      <a href="https://wildkitchen.show" target="_blank" class="btn-gold reveal reveal-delay-4">Watch the Show</a>
-      <div class="wk-tagline reveal">Inspired by Adventure</div>
     </div>
   </section>
 
@@ -577,7 +581,12 @@
 
     // Scroll reveal
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.observe(e.target); }
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
     });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 

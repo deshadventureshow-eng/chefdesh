@@ -177,23 +177,11 @@
         </div>
       </button>
 
-      <button type="button" class="chooser-card" data-gallery="lifestyle">
-        <div class="chooser-img"><img src="lifestyle.jpg" alt="Lifestyle" /></div>
-        <div class="chooser-overlay"></div>
-        <div class="chooser-divider"></div>
-        <div class="chooser-content">
-          <div class="chooser-num">03</div>
-          <div class="chooser-sub">Moments · Movement · Mood</div>
-          <h3 class="chooser-title">Lifestyle</h3>
-          <span class="chooser-arrow">Enter Gallery →</span>
-        </div>
-      </button>
-
       <button type="button" class="chooser-card" data-gallery="personal">
         <div class="chooser-img"><img src="personal.jpg" alt="Personal" /></div>
         <div class="chooser-overlay"></div>
         <div class="chooser-content">
-          <div class="chooser-num">04</div>
+          <div class="chooser-num">03</div>
           <div class="chooser-sub">Adventure · Wild · Home</div>
           <h3 class="chooser-title">Personal</h3>
           <span class="chooser-arrow">Enter Gallery →</span>
@@ -259,36 +247,11 @@
     </div>
   </section>
 
-  <!-- LIFESTYLE GALLERY -->
-  <section id="gallery-lifestyle" class="view gallery">
-    <div class="gallery-header">
-      <div class="gallery-title-block">
-        <div class="gallery-label">Gallery · 03</div>
-        <h2 class="gallery-title">Lifestyle <em>Photography</em></h2>
-      </div>
-      <button type="button" class="back-btn" onclick="showHero()">← Back to Categories</button>
-    </div>
-    <div class="gallery-grid">
-      <div class="gallery-item"><img src="lifestyle-1.jpg" alt="Lifestyle 1" /></div>
-      <div class="gallery-item"><img src="lifestyle-2.jpg" alt="Lifestyle 2" /></div>
-      <div class="gallery-item"><img src="lifestyle-3.jpg" alt="Lifestyle 3" /></div>
-      <div class="gallery-item"><img src="lifestyle-4.jpg" alt="Lifestyle 4" /></div>
-      <div class="gallery-item"><img src="lifestyle-5.jpg" alt="Lifestyle 5" /></div>
-      <div class="gallery-item"><img src="lifestyle-6.jpg" alt="Lifestyle 6" /></div>
-      <div class="gallery-item"><img src="lifestyle-7.jpg" alt="Lifestyle 7" /></div>
-      <div class="gallery-item"><img src="lifestyle-8.jpg" alt="Lifestyle 8" /></div>
-      <div class="gallery-item"><img src="lifestyle-9.jpg" alt="Lifestyle 9" /></div>
-      <div class="gallery-item"><img src="lifestyle-10.jpg" alt="Lifestyle 10" /></div>
-      <div class="gallery-item"><img src="lifestyle-12.jpg" alt="Lifestyle 12" /></div>
-      <div class="gallery-item"><img src="lifestyle-13.jpg" alt="Lifestyle 13" /></div>
-    </div>
-  </section>
-
   <!-- PERSONAL GALLERY -->
   <section id="gallery-personal" class="view gallery">
     <div class="gallery-header">
       <div class="gallery-title-block">
-        <div class="gallery-label">Gallery · 04</div>
+        <div class="gallery-label">Gallery · 03</div>
         <h2 class="gallery-title">Personal <em>Work</em></h2>
       </div>
       <button type="button" class="back-btn" onclick="showHero()">← Back to Categories</button>
@@ -363,7 +326,7 @@
         img.parentElement.addEventListener('click', function() { openLightbox(srcs, i); });
       });
     }
-    ['gallery-food','gallery-portraits','gallery-lifestyle','gallery-personal'].forEach(function(id) {
+    ['gallery-food','gallery-portraits','gallery-personal'].forEach(function(id) {
       wireGallery(id);
     });
 
